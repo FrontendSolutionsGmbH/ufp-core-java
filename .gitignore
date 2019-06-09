@@ -1,0 +1,8 @@
+core/target/
+*.iml
+target/
+settings-delete.xml
+m2/repository
+m2/settings-docker.xml
+m2/copy_reference_file.log
+dependency-reduced-pom.xml
