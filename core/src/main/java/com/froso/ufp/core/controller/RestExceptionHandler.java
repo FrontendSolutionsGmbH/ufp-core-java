@@ -74,7 +74,7 @@ class RestExceptionHandler
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(mainException.getResultStatus());
         // no stacktrace needed here
-        responseHandler.addError(mainException.getMessage());
+//        responseHandler.addError(mainException.getMessage());
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
@@ -107,8 +107,8 @@ class RestExceptionHandler
 
 
         if (PropertyServiceRepositoryImpl.getPropertyBoolean(PROP_NAME_SECURITY_REPORTING_STACKTRACE)) {
-            responseHandler.addMessage(ExceptionUtils.getRootCauseMessage(mainException));
             responseHandler.addError(mainException.getMessage());
+            responseHandler.addError(ExceptionUtils.getRootCauseMessage(mainException));
         }
         try {
             /*

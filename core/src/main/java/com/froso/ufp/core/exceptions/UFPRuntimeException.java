@@ -35,6 +35,12 @@ public class UFPRuntimeException extends RuntimeException implements IUFPExcepti
         this.resultStatus = resultStatus;
     }
 
+    public UFPRuntimeException(IResultStatusEnumCode resultStatus, String message, Throwable cause) {
+
+        super(message, cause);
+        this.resultStatus = resultStatus;
+    }
+
     public UFPRuntimeException() {
 
         super();
