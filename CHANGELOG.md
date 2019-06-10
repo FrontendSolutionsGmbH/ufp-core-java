@@ -1,6 +1,10 @@
 # UFP Core
  
- # 1.1 unreleased
+ # unreleased
+ 
+ # 1.0.6 releases
+ 
+    - rest exception handling remove double output of messages
  
  # 1.0.x releases
  
