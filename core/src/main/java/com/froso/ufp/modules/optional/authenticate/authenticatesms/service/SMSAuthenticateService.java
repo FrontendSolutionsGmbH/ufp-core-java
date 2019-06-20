@@ -169,7 +169,7 @@ public class SMSAuthenticateService extends AbstractAuthenticateService {
         }
     }
 
-    public void createNewNonceForPhoneNumber(SMSAuthenticateRequestDataPhonenumberOnly data) {
+    public void createNewNonceForPhoneNumber(SMSAuthenticateRequestDataPhonenumberOnly data, Boolean autoRegisterEnabled) {
 
         Boolean isNew = false;
         SMSAuthenticateModel smsAuthenticateModel = smsAuthenticateCRUDService.findOneByKeyValue("data.phoneNumber", "=" + smsAuthenticateCRUDService.validatePhoneNumberAndReturnCleaned(data.getPhoneNumber()));
@@ -177,7 +177,7 @@ public class SMSAuthenticateService extends AbstractAuthenticateService {
         smsAuthenticateCRUDService.validatePhoneNumberAndReturnCleaned(data.getPhoneNumber());
         if (smsAuthenticateModel == null) {
 
-            if (authenticationsService.isAutoRegisterEnabled()) {
+            if (autoRegisterEnabled) {
                 // autoregister is enabled, create a new session
                 LOGGER.info("autoRegister enabled, creating authentication for {}", data.getPhoneNumber());
                 smsAuthenticateModel = smsAuthenticateCRUDService.createNewDefault();
@@ -193,20 +193,22 @@ public class SMSAuthenticateService extends AbstractAuthenticateService {
 
         }
 
-        if (smsAuthenticateModel != null) {
-            // authentication existant, check if incoming nonce existant,
-            // check nonce
-            if (smsAuthenticateModel.getCoreUser().isLinked()) {
-                sendLowLevelSMS(smsAuthenticateModel, SMS_AUTHENTICATE_NONCE_FOLLOWUP_VERIFIED);
+        // authentication existant, check if incoming nonce existant,
+        // check nonce
+        if (smsAuthenticateModel.getCoreUser().isLinked()) {
+            sendLowLevelSMS(smsAuthenticateModel, SMS_AUTHENTICATE_NONCE_FOLLOWUP_VERIFIED);
+        } else {
+            if (isNew) {
+                // differentiate for first sms ever, and already known, but still not used
+                sendLowLevelSMS(smsAuthenticateModel, SMS_AUTHENTICATE_NONCE_FIRST_UNVERIFIED);
             } else {
-                if (isNew) {
-                    // differentiate for first sms ever, and already known, but still not used
-                    sendLowLevelSMS(smsAuthenticateModel, SMS_AUTHENTICATE_NONCE_FIRST_UNVERIFIED);
-                } else {
-                    sendLowLevelSMS(smsAuthenticateModel, SMS_AUTHENTICATE_NONCE_FIRST_UNVERIFIED_FOLLOWUP);
-                }
+                sendLowLevelSMS(smsAuthenticateModel, SMS_AUTHENTICATE_NONCE_FIRST_UNVERIFIED_FOLLOWUP);
             }
         }
+    }
+
+    public void createNewNonceForPhoneNumber(SMSAuthenticateRequestDataPhonenumberOnly data) {
+        createNewNonceForPhoneNumber(data, authenticationsService.isAutoRegisterEnabled());
     }
 
     public TokenData authenticateSMSData(SMSAuthenticateRequestData data) {
