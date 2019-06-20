@@ -14,13 +14,13 @@ public class UFPRuntimeException extends RuntimeException implements IUFPExcepti
 
     public UFPRuntimeException(IResultStatusEnumCode resultStatus, String message) {
 
-        super(message);
+        super(resultStatus.toString()+' '+message);
         this.resultStatus = resultStatus;
     }
 
     public UFPRuntimeException(IResultStatusEnumCode resultStatus) {
 
-        super();
+        super(resultStatus.toString());
         this.resultStatus = resultStatus;
     }
 
@@ -31,13 +31,13 @@ public class UFPRuntimeException extends RuntimeException implements IUFPExcepti
 
     public UFPRuntimeException(IResultStatusEnumCode resultStatus, Throwable cause) {
 
-        super(cause);
+        super(resultStatus.toString(),cause);
         this.resultStatus = resultStatus;
     }
 
     public UFPRuntimeException(IResultStatusEnumCode resultStatus, String message, Throwable cause) {
 
-        super(message, cause);
+        super(resultStatus.toString()+' '+message, cause);
         this.resultStatus = resultStatus;
     }
 

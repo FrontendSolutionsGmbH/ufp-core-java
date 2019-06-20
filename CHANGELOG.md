@@ -2,9 +2,12 @@
  
  # unreleased
  
- # 1.0.6 releases
+ # 1.0.6 unreleased
  
     - rest exception handling remove double output of messages
+    - reset exception output message
+    - sms auth controller protected authservice
+
  
  # 1.0.x releases
  
