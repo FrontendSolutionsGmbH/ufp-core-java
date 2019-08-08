@@ -91,15 +91,11 @@ public class QueueWorkerEmailSender implements ServiceStatusReporter, INamedObje
                     List<QueueEmail> workflowInstancesError = messageEmailService.findAllErrornous(pageable);
                     // Add the errornous as well
                     workflowInstances.addAll(workflowInstancesError);
-                    Parallel.parallelFor(workflowInstances, propertyService.getPropertyValueInteger(PROPERTY_WORKFLOW_MAXTHREADS), "EmailSending", new ParallelStep() {
-                        @Override
-                        public boolean execute(int index, List<?> list) {
-
-                            QueueEmail simpleMessageEmail = (QueueEmail) list.get(index);
-                            LOGGER.debug("Processing:" + simpleMessageEmail);
-                            sendEmail(simpleMessageEmail);
-                            return true;
-                        }
+                    Parallel.parallelFor(workflowInstances, propertyService.getPropertyValueInteger(PROPERTY_WORKFLOW_MAXTHREADS), "EmailSending", (index, list) -> {
+                        QueueEmail simpleMessageEmail = (QueueEmail) list.get(index);
+                        LOGGER.debug("Processing:" + simpleMessageEmail);
+                        sendEmail(simpleMessageEmail);
+                        return true;
                     });
                     processingEmails.set(false);
                 }

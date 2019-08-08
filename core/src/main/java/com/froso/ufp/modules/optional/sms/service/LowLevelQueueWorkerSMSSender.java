@@ -55,29 +55,26 @@ public class LowLevelQueueWorkerSMSSender {
                     List<QueueSms> messagesErrornous = lowLevelSMSService.findAllErrornous(pageable);
                     // Add the errornous as well
                     messagesNew.addAll(messagesErrornous);
-                    Parallel.parallelFor(messagesNew, propertyService.getPropertyValueInteger(PROPERTY_WORKFLOW_MAXTHREADS), "SMSSending", new ParallelStep() {
-                                @Override
-                                public boolean execute(int index, List<?> list) {
+                    Parallel.parallelFor(messagesNew, propertyService.getPropertyValueInteger(PROPERTY_WORKFLOW_MAXTHREADS), "SMSSending", (index, list) -> {
 
-                                    QueueSms lowLevelSMS = (QueueSms) list.get(index);
+                                QueueSms lowLevelSMS = (QueueSms) list.get(index);
 
-                                    lowLevelSMS.getInfo().setRetryCount(lowLevelSMS.getInfo().getRetryCount() + 1);
+                                lowLevelSMS.getInfo().setRetryCount(lowLevelSMS.getInfo().getRetryCount() + 1);
 
-                                    if (lowLevelSMS.getInfo().getRetryCount() > 10) {
-                                        lowLevelSMS.getInfo().setStatus(MessageStatusEnum.ERROR_CANCELLED);
-                                    } else {
-                                        LOGGER.debug("Processing:" + lowLevelSMS);
-                                        try {
-                                            lowLevelSMS = lowLevelSMSSenderService.sendSMS(lowLevelSMS);
-                                            lowLevelSMS.getInfo().setStatus(MessageStatusEnum.PROCESSED);
-                                        } catch (Exception e) {
-                                            lowLevelSMS.getInfo().setStatus(MessageStatusEnum.ERROR);
-                                            lowLevelSMS.getInfo().setErrorMessage(e.getMessage());
-                                        }
+                                if (lowLevelSMS.getInfo().getRetryCount() > 10) {
+                                    lowLevelSMS.getInfo().setStatus(MessageStatusEnum.ERROR_CANCELLED);
+                                } else {
+                                    LOGGER.debug("Processing:" + lowLevelSMS);
+                                    try {
+                                        lowLevelSMS = lowLevelSMSSenderService.sendSMS(lowLevelSMS);
+                                        lowLevelSMS.getInfo().setStatus(MessageStatusEnum.PROCESSED);
+                                    } catch (Exception e) {
+                                        lowLevelSMS.getInfo().setStatus(MessageStatusEnum.ERROR);
+                                        lowLevelSMS.getInfo().setErrorMessage(e.getMessage());
                                     }
-                                    lowLevelSMSService.save(lowLevelSMS);
-                                    return true;
                                 }
+                                lowLevelSMSService.save(lowLevelSMS);
+                                return true;
                             }
 
                     );

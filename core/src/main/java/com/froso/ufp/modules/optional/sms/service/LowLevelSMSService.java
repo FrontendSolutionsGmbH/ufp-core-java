@@ -1,6 +1,7 @@
 package com.froso.ufp.modules.optional.sms.service;
 
 import com.froso.ufp.core.domain.documents.*;
+import com.froso.ufp.core.service.util.query.*;
 import com.froso.ufp.modules.core.client.service.*;
 import com.froso.ufp.modules.optional.messaging.model.messaging.*;
 import com.froso.ufp.modules.optional.sms.model.*;
@@ -43,12 +44,19 @@ public class LowLevelSMSService extends AbstractClientRefService<QueueSms> {
 
     }
 
-    public List<QueueSms> findAllNew(Pageable p) {
+    public List<QueueSms> findAllNew(Pageable pageable) {
+        Map<String, String> searchMap = new HashMap<>();
+        searchMap.put("status", "=" + MessageStatusEnum.WAITING_TO_SEND.toString());
+        searchMap.put(SearchQuery.PAGE, pageable.getPageNumber() + "");
+        searchMap.put(SearchQuery.LIMIT, pageable.getPageSize() + "");
         return findByKeyValue("info.status", "=" + MessageStatusEnum.WAITING_TO_SEND);
     }
 
-    public List<QueueSms> findAllErrornous(Pageable p) {
-        return findByKeyValue("info.status", "=" + "ERROR");
-
+    public List<QueueSms> findAllErrornous(Pageable pageable) {
+        Map<String, String> searchMap = new HashMap<>();
+        searchMap.put("status", "=" + MessageStatusEnum.ERROR.toString());
+        searchMap.put(SearchQuery.PAGE, pageable.getPageNumber() + "");
+        searchMap.put(SearchQuery.LIMIT, pageable.getPageSize() + "");
+        return findByKeyValues(searchMap);
     }
 }
