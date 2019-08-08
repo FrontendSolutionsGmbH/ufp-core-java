@@ -4,6 +4,7 @@
  
  # 1.0.6 unreleased
  
+    - fix queue sms/email not ending on error
     - rest exception handling remove double output of messages
     - reset exception output message
     - sms auth controller protected authservice

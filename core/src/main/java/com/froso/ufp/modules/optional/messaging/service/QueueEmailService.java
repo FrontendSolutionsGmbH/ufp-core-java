@@ -1,12 +1,5 @@
 package com.froso.ufp.modules.optional.messaging.service;
 
-import com.froso.ufp.modules.core.client.service.*;
-import com.froso.ufp.modules.optional.messaging.model.messaging.*;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.*;
-
-import java.util.*;
-
 /**
  * The type Queue email service.
  */
@@ -20,7 +13,7 @@ public class QueueEmailService extends AbstractClientRefService<QueueEmail> {
      * @return the list
      */
     public List<QueueEmail> findAllNew(Pageable pageable) {
-        return findByKeyValue("status", MessageStatusEnum.WAITING_TO_SEND.toString());
+        return findByKeyValue("status", "=" + MessageStatusEnum.WAITING_TO_SEND.toString());
     }
 
     /**
@@ -30,6 +23,6 @@ public class QueueEmailService extends AbstractClientRefService<QueueEmail> {
      * @return the list
      */
     public List<QueueEmail> findAllErrornous(Pageable pageable) {
-        return findByKeyValue("status", MessageStatusEnum.ERROR.toString());
+        return findByKeyValue("status", "=" + MessageStatusEnum.ERROR.toString());
     }
 }
