@@ -1,5 +1,12 @@
 package com.froso.ufp.modules.optional.messaging.service;
 
+import com.froso.ufp.modules.core.client.service.*;
+import com.froso.ufp.modules.optional.messaging.model.messaging.*;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.*;
+
+import java.util.*;
+
 /**
  * The type Queue email service.
  */

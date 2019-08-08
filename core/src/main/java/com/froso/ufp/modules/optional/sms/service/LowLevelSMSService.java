@@ -1,5 +1,15 @@
 package com.froso.ufp.modules.optional.sms.service;
 
+import com.froso.ufp.core.domain.documents.*;
+import com.froso.ufp.modules.core.client.service.*;
+import com.froso.ufp.modules.optional.messaging.model.messaging.*;
+import com.froso.ufp.modules.optional.sms.model.*;
+import com.froso.ufp.modules.optional.sms.model.sms.*;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.*;
+
+import java.util.*;
+
 @Service
 public class LowLevelSMSService extends AbstractClientRefService<QueueSms> {
 
