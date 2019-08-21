@@ -59,7 +59,7 @@ public class WebConfigCore extends WebMvcConfigurerAdapter {
          */
         LOGGER.info("Configuring UFP Static /web path");
         LOGGER.info("Using /web path: " + resourcesExternal);
-        registry.addResourceHandler("/web2/**").addResourceLocations("file:" + resourcesExternal + "/..")
+        registry.addResourceHandler("/web/**").addResourceLocations("file:" + resourcesExternal + "/..")
                 .setCachePeriod(60 * 60 * 24)
                 .resourceChain(true)
                 .addResolver(new GzipResourceResolver());

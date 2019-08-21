@@ -27,7 +27,7 @@ public class SMSAuthenticateController {
     public static final String TEMPLATE_INVALID_PHONE_NUMBER = "|SMS_INVALID_PHONE_NUMBER|If the phonenumber has any syntactical errors |\n";
     public static final String TEMPLATE_SMS_AUTHORIZATION_DISABLED = "|SMS_AUTHORIZATION_DISABLED|When the particular authentication associated with the - already known - phone number is disabled and cannot be used anymore|\n";
 
-    private final SMSAuthenticateService smsAuthenticateService;
+    protected final SMSAuthenticateService smsAuthenticateService;
 
     @Autowired
     public SMSAuthenticateController(SMSAuthenticateService smsAuthenticateService) {

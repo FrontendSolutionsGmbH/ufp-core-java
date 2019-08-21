@@ -14,7 +14,7 @@ public class EmailAuthenticateData implements IDataObject {
     @ApiModelProperty(required = true, notes = "Email to be used for authentication")
     @NotNull
     @TextIndexed
-    @Indexed(unique = true)
+    @Indexed(unique = true,background = true)
     @Pattern(regexp = Validations.REGEXP_EMAIL,
             message = ValidationMessages.INVALID_EMAIL)
     private String email;

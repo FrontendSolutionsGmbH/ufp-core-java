@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.froso.ufp.backend</groupId>
     <artifactId>ufp-parent</artifactId>
-    <version>1.0.5-RELEASE</version>
+    <version>1.0.6</version>
     <packaging>pom</packaging>
     <url>https://froso.de</url>
     <inceptionYear>2019</inceptionYear>

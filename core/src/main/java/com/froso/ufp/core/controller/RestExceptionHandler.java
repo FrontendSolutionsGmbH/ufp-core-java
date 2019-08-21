@@ -6,7 +6,6 @@ import com.froso.ufp.core.response.*;
 import com.froso.ufp.core.response.binding.*;
 import com.froso.ufp.modules.core.applicationproperty.service.*;
 import com.froso.ufp.modules.core.user.exception.*;
-import java.io.*;
 import org.apache.commons.lang.exception.*;
 import org.slf4j.*;
 import org.springframework.beans.*;
@@ -20,6 +19,8 @@ import org.springframework.web.context.request.*;
 import org.springframework.web.multipart.support.*;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.method.annotation.*;
+
+import java.io.*;
 
 /**
  * Created with IntelliJ IDEA. Christian Kleinhuis (ck@froso.de)leinhuis (ck@froso.de) Date: 13.11.13 Time:
@@ -40,7 +41,6 @@ class RestExceptionHandler
     private static final String APPLICATION_EXCEPTION_OCCURED = "Application Exception Occured:";
     //get log4j handler
     private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class);
-
 
     /**
      * Application resource not found exception response entity.
@@ -74,7 +74,7 @@ class RestExceptionHandler
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(mainException.getResultStatus());
         // no stacktrace needed here
-        responseHandler.addError(mainException.getMessage());
+//        responseHandler.addError(mainException.getMessage());
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
@@ -105,10 +105,9 @@ class RestExceptionHandler
         LOGGER.debug(APPLICATION_EXCEPTION_OCCURED, mainException);
         ResponseEntity<Object> responseEntity;
 
-
         if (PropertyServiceRepositoryImpl.getPropertyBoolean(PROP_NAME_SECURITY_REPORTING_STACKTRACE)) {
-            responseHandler.addMessage(ExceptionUtils.getRootCauseMessage(mainException));
             responseHandler.addError(mainException.getMessage());
+            responseHandler.addError(ExceptionUtils.getRootCauseMessage(mainException));
         }
         try {
             /*
@@ -220,7 +219,6 @@ class RestExceptionHandler
         //    return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
 
-
     /**
      * Handle token invalid.
      *
@@ -272,7 +270,6 @@ class RestExceptionHandler
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
 
-
     /**
      * Conflict.
      *
@@ -293,7 +290,6 @@ class RestExceptionHandler
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
 
-
     /**
      * Handle remote host changed response entity.
      *
@@ -303,7 +299,6 @@ class RestExceptionHandler
      */
     @ExceptionHandler(UserTokenException.RemoteHostChanged.class)
     protected ResponseEntity<Object> handleRemoteHostChanged(UserException ex, WebRequest request) {
-
 
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
@@ -327,7 +322,6 @@ class RestExceptionHandler
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_JAVA_INVALID_ARGUMENT);
 
-
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
 
@@ -345,7 +339,6 @@ class RestExceptionHandler
         LOGGER.info("Global Exception handler ", mainException);
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_JAVA_INVALID_ARGUMENT);
-
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
@@ -390,7 +383,6 @@ class RestExceptionHandler
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_USER_IS_BLOCKED);
 
-
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
 
@@ -408,7 +400,6 @@ class RestExceptionHandler
         LOGGER.info("Global Exception handler ", mainException);
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_USER_REQUIRES_ACTIVATION);
-
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
@@ -428,7 +419,6 @@ class RestExceptionHandler
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_CREATE_USER_ALREADY_EXISTANT);
 
-
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
 
@@ -446,7 +436,6 @@ class RestExceptionHandler
         LOGGER.info("Global Exception handler ", mainException);
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_USER_HAS_ACTIVE_ORDER);
-
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
@@ -518,7 +507,6 @@ class RestExceptionHandler
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
         responseHandler2.getInfo().setStatus(SpringMappedResults.HTTP_PREQUEST_METHOD_NOT_SUPPORTED);
@@ -529,7 +517,6 @@ class RestExceptionHandler
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
                                                                      HttpHeaders headers, HttpStatus status, WebRequest request) {
-
 
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
@@ -542,7 +529,6 @@ class RestExceptionHandler
     protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
                                                                       HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
         responseHandler2.getInfo().setStatus(SpringMappedResults.HTTP_MEDIATYPE_NOT_ACCEPTABLE);
@@ -554,7 +540,6 @@ class RestExceptionHandler
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,
                                                                HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
         responseHandler2.getInfo().setStatus(SpringMappedResults.MISSING_PATHVARIABLE);
@@ -565,7 +550,6 @@ class RestExceptionHandler
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
                                                                           HttpHeaders headers, HttpStatus status, WebRequest request) {
-
 
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
@@ -602,7 +586,6 @@ class RestExceptionHandler
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
         responseHandler2.getInfo().setStatus(SpringMappedResults.TYPE_MISMATCH);
@@ -614,7 +597,6 @@ class RestExceptionHandler
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
         responseHandler2.getInfo().setStatus(SpringMappedResults.HTTP_MESSAGE_NOT_WRITABLE);
@@ -625,7 +607,6 @@ class RestExceptionHandler
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-
 
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
@@ -650,7 +631,6 @@ class RestExceptionHandler
     protected ResponseEntity<Object> handleBindException(BindException ex,
                                                          HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
         responseHandler2.getInfo().setStatus(SpringMappedResults.BIND_EXCEPTION);
@@ -658,11 +638,9 @@ class RestExceptionHandler
         return handleExceptionInternal(ex, responseHandler2, new HttpHeaders(), HttpStatus.OK, request);
     }
 
-
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-
 
         LOGGER.info("Global Exception handler ", ex);
         BackendResponseTemplate2Typed responseHandler2 = new BackendResponseTemplate2Typed();
@@ -686,7 +664,6 @@ class RestExceptionHandler
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.FATAL_ERROR);
         fillResponseHandlerDataWithStacktraceAndStuff(responseHandler, mainException);
-
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
@@ -718,14 +695,12 @@ class RestExceptionHandler
             LOGGER.error("Free Memory : " + Runtime.getRuntime().freeMemory() / 1024 + " MB");
             LOGGER.error("Used : " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 + " MB");
 
-
             LOGGER.error("Exception Message : ");
             LOGGER.error(ExceptionUtils.getMessage(mainException));
             LOGGER.error("Root Cause Message: ");
             LOGGER.error(ExceptionUtils.getRootCauseMessage(mainException));
             LOGGER.error("Ful Stack trace: ");
             LOGGER.error(ExceptionUtils.getFullStackTrace(mainException));
-
 
             LOGGER.error("MainException: ");
             LOGGER.error("Exception Handler:", mainException);
@@ -815,7 +790,6 @@ class RestExceptionHandler
     @ExceptionHandler(org.springframework.dao.DuplicateKeyException.class)
     protected ResponseEntity<Object> handleMongoConflictDuplicateKey(org.springframework.dao.DuplicateKeyException mainException, WebRequest request) {
 
-
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_MONGODB_DUPLICATEKEY);
 
@@ -839,7 +813,6 @@ class RestExceptionHandler
         LOGGER.info("Global Exception handler ", mainException);
         ResponseHandler responseHandler = new ResponseHandler();
         responseHandler.setStatus(ResultStatusEnumCode.ERROR_RESOURCE_NOTAVAILABLE);
-
 
         return createResponseEntity(responseHandler, mainException, request, HttpStatus.OK);
     }
