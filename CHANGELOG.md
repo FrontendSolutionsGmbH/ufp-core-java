@@ -2,7 +2,7 @@
  
  # unreleased
  
- # 1.0.6 unreleased
+ # 1.0.6 
  
     - fix queue sms/email not ending on error
     - rest exception handling remove double output of messages
