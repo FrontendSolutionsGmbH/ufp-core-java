@@ -69,24 +69,6 @@ public abstract class AbstractCoreUser
         this.roles = roles;
     }
 
-    /**
-     * Gets role.
-     *
-     * @return the role
-     */
-    @Override
-    public UserRoleEnum getRole() {
-        return role;
-    }
-
-    /**
-     * Sets role.
-     *
-     * @param role the role
-     */
-    public void setRole(UserRoleEnum role) {
-        this.role = role;
-    }
 
     /**
      * Gets counters.

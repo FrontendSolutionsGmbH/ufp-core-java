@@ -9,19 +9,7 @@ import java.util.*;
  * Created by ckleinhuis on 12.12.2016.
  */
 public interface ICoreUser extends IDataDocument {
-    /**
-     * Gets role.
-     *
-     * @return the role
-     */
-    UserRoleEnum getRole();
 
-    /**
-     * Sets role.
-     *
-     * @param role the role
-     */
-    void setRole(UserRoleEnum role);
 
     Set<DataDocumentLink<RoleDefinition>> getRoles();
 

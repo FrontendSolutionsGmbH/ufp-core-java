@@ -3,9 +3,13 @@ package com.froso.ufp.modules.core.roles.service;
 import com.froso.ufp.core.domain.documents.*;
 import com.froso.ufp.modules.core.client.service.*;
 import com.froso.ufp.modules.core.roles.model.*;
+
 import javax.annotation.*;
+
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 @Service
 public class RoleDefinitionService extends AbstractClientRefService<RoleDefinition> {
@@ -57,12 +61,20 @@ public class RoleDefinitionService extends AbstractClientRefService<RoleDefiniti
         return new DataDocumentLink<>(getDefaultAdminRole().getId(), RoleDefinition.TYPE_NAME);
     }
 
-    public DataDocumentLink<RoleDefinition> getDefaultUserRoleLink() {
-        return new DataDocumentLink<>(getDefaultUserRole().getId(), RoleDefinition.TYPE_NAME);
-    }
-
     public RoleDefinition getDefaultUserRole() {
         return getOrCreateRole("user");
+    }
+
+    public List<String> getAllCapabilities(Set<DataDocumentLink<RoleDefinition>> input) {
+        List<String> result = new ArrayList<>();
+        for (DataDocumentLink<RoleDefinition> roleDefinitionLink : input) {
+            RoleDefinition definition = findOne(roleDefinitionLink.getId());
+            for (DataDocumentLink<RoleCapability> capLink : definition.getCapabilities()) {
+                RoleCapability cap = roleCapabilityService.findOne(capLink.getId());
+                result.add(cap.getName());
+            }
+        }
+        return result;
     }
 
 

@@ -7,6 +7,7 @@ import com.froso.ufp.core.response.*;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
+import com.froso.ufp.modules.core.roles.service.*;
 import com.froso.ufp.modules.core.session.interfaces.*;
 import com.froso.ufp.modules.core.session.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
@@ -65,7 +66,11 @@ public abstract class AbstractTokenTranslatorFilter
     @Autowired
     private ISessionService sessionService;
     @Autowired
-    private ICoreUserService entiteitService;
+    private RoleDefinitionService roleDefinitionService;
+    @Autowired
+    private RoleCapabilityService roleCapabilityService;
+    @Autowired
+    private ICoreUserService userService;
     @Autowired(required = false)
     private ISecurityLogService securityLogService;
 
@@ -239,7 +244,7 @@ public abstract class AbstractTokenTranslatorFilter
                 throw new UserTokenException("Token not found!");
             }
 
-            ICoreUser coreUser = (ICoreUser) entiteitService.findOneBrute(session.getUserLink().getId());
+            ICoreUser coreUser = (ICoreUser) userService.findOneBrute(session.getUserLink().getId());
             if (coreUser == null) {
                 throw new UserTokenException("CoreUser not found!");
 
@@ -276,7 +281,7 @@ public abstract class AbstractTokenTranslatorFilter
             // And finally perform a role check ( preliminary according to encrypted role in token!  )
 
 
-            validateUserRole(coreUser.getId(), coreUser.getRole().toString(), (HttpServletRequest) request);
+            validateUserRole(coreUser.getId(), (HttpServletRequest) request);
             request.getRequestDispatcher(urlStringBuilder.toString()).forward(request, response);
             // refactor if needed, but return right now ( do not send dofilter and forward at the
             // same time!
@@ -343,10 +348,14 @@ public abstract class AbstractTokenTranslatorFilter
      * Validate user role.
      *
      * @param userID  the user id
-     * @param role    the role
      * @param request the request
      */
-    protected void validateUserRole(String userID, String role, HttpServletRequest request) {
+    protected void validateUserRole(String userID,HttpServletRequest request) {
+
+        // retrieve user role
+
+        ICoreUser user=userService.findOneCoreUser(userID);
+List<String> capabilities=roleDefinitionService.getAllCapabilities(user.getRoles());
 
         doValidateUserRole(role);
         // perform here a logging if role is admin....

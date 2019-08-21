@@ -61,8 +61,8 @@ public class CoreUserService
         stringBuffer.append(coreUser.getId());
         stringBuffer.append("&");
         stringBuffer.append(TOKENIDENTIFIER_ROLE);
-        stringBuffer.append("=");
-        stringBuffer.append(coreUser.getRole());
+//        stringBuffer.append("=");
+//        stringBuffer.append(coreUser.getRole());
         return Encryptor.enrypt(stringBuffer.toString(), getConstantOncePerSession128BitSecretKey());
     }
 
