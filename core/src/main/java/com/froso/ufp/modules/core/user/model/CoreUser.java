@@ -52,18 +52,18 @@ public class CoreUser
     private Boolean blocked = Boolean.FALSE;
 //    @TextIndexed
 //    private UserRoleEnum role = UserRoleEnum.ROLE_GUEST;
-    private Set<DataDocumentLink<RoleDefinition>> roles = new HashSet<DataDocumentLink<RoleDefinition>>();
+    private Set<DataDocumentLink<UserRole>> roles = new HashSet<DataDocumentLink<UserRole>>();
 
     public CoreUser() {
         super(TYPE_NAME);
     }
 
     @Override
-    public Set<DataDocumentLink<RoleDefinition>> getRoles() {
+    public Set<DataDocumentLink<UserRole>> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<DataDocumentLink<RoleDefinition>> roles) {
+    public void setRoles(Set<DataDocumentLink<UserRole>> roles) {
         this.roles = roles;
     }
 

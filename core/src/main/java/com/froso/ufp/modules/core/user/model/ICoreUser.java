@@ -11,7 +11,7 @@ import java.util.*;
 public interface ICoreUser extends IDataDocument {
 
 
-    Set<DataDocumentLink<RoleDefinition>> getRoles();
+    Set<DataDocumentLink<UserRole>> getRoles();
 
     String getFirstName();
 

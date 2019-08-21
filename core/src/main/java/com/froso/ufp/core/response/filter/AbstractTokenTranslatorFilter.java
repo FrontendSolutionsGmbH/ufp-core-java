@@ -13,13 +13,12 @@ import com.froso.ufp.modules.core.session.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
 import com.froso.ufp.modules.core.user.model.*;
 import com.froso.ufp.modules.core.user.service.*;
-import com.froso.ufp.modules.optional.securitylog.interfaces.*;
-import com.froso.ufp.modules.optional.securitylog.model.*;
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.apache.commons.io.*;
+
 import org.joda.time.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -66,7 +65,7 @@ public abstract class AbstractTokenTranslatorFilter
     @Autowired
     private ISessionService sessionService;
     @Autowired
-    private RoleDefinitionService roleDefinitionService;
+    private UserRoleService userRoleService;
     @Autowired
     private ICoreUserService userService;
     @Autowired
@@ -275,7 +274,7 @@ public abstract class AbstractTokenTranslatorFilter
             // And finally perform a role check ( preliminary according to encrypted role in token!  )
 
 
-            validateUserRole(coreUser.getId(), (HttpServletRequest) request);
+            validateUserRights(coreUser.getId(), (HttpServletRequest) request);
             request.getRequestDispatcher(urlStringBuilder.toString()).forward(request, response);
             // refactor if needed, but return right now ( do not send dofilter and forward at the
             // same time!
@@ -344,15 +343,13 @@ public abstract class AbstractTokenTranslatorFilter
      * @param userID  the user id
      * @param request the request
      */
-    protected void validateUserRole(String userID,HttpServletRequest request) {
+    protected void validateUserRights(String userID, HttpServletRequest request) {
 
         // retrieve user role
-
         ICoreUser user=userService.findOneCoreUser(userID);
-Set<String> capabilities=roleDefinitionService.getAllCapabilities(user.getRoles());
-       doValidateUserRole(capabilities);
-
-    }
+        Set<String> capabilities= userRoleService.getAllRights(user.getRoles());
+            doValidateUserRole(capabilities);
+        }
 
 
     private void verifyTime(String input) {

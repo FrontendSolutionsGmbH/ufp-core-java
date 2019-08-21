@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.*;
 
-@Document(collection = RoleDefinition.TYPE_NAME)
+@Document(collection = UserRole.TYPE_NAME)
 @UFPResourceMetadataAnnotation(
         keywords =
         @ResourceKeywords({
@@ -15,22 +15,22 @@ import java.util.*;
                 @ResourceKeyword("MENU_RIGHTS_ROLES"),
         })
 )
-public class RoleDefinition extends ClientReferenceWithName {
+public class UserRole extends ClientReferenceWithName {
 
-    public static final String TYPE_NAME = "RoleDefinition";
+    public static final String TYPE_NAME = "UserRole";
 
-    @UfpPossibleLinkTypes({RoleCapability.class})
-    private Set<DataDocumentLink<RoleCapability>> capabilities = new HashSet<>();
+    @UfpPossibleLinkTypes({UserRight.class})
+    private Set<DataDocumentLink<UserRight>> capabilities = new HashSet<>();
 
-    public RoleDefinition() {
+    public UserRole() {
 
         super(TYPE_NAME);
     }
-    public Set<DataDocumentLink<RoleCapability>> getCapabilities() {
+    public Set<DataDocumentLink<UserRight>> getCapabilities() {
         return capabilities;
     }
 
-    public void setCapabilities(Set<DataDocumentLink<RoleCapability>> capabilities) {
+    public void setCapabilities(Set<DataDocumentLink<UserRight>> capabilities) {
         this.capabilities = capabilities;
     }
 }

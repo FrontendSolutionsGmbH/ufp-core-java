@@ -8,7 +8,9 @@ import com.froso.ufp.modules.core.client.model.*;
 import com.froso.ufp.modules.core.resourcemetadata.annotations.*;
 import com.froso.ufp.modules.core.user.model.*;
 import io.swagger.annotations.*;
+
 import java.util.*;
+
 import org.apache.commons.lang3.*;
 import org.joda.time.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -58,6 +60,9 @@ public class Session
     private DateTime creationTime = DateTime.now();
     private DateTime closeTime;
     private DateTime endsOn;
+    private Set<String> rights;
+    private String firstName;
+    private String lastName;
     private Boolean active = false;
     @ApiModelProperty(hidden = true)
     private String rsaServerPrivateKey = StringUtils.EMPTY;
@@ -72,7 +77,6 @@ public class Session
     private String error;
     private List<Integer> usedRequestIndices = new ArrayList<>();
     private Integer lastUsedIndex = 0;
-
     /**
      * Instantiates a new Simple session.
      */
@@ -87,6 +91,30 @@ public class Session
      */
     public static String getTypeName() {
         return TYPE_NAME;
+    }
+
+    public Set<String> getRights() {
+        return rights;
+    }
+
+    public void setRights(Set<String> rights) {
+        this.rights = rights;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     /**

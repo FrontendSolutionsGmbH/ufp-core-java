@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
  * template use File | Settings | File Templates.
  */
 @Controller
-@RequestMapping("/" + BaseRepositoryController.ENDPOINT + "/" + RoleDefinition.TYPE_NAME)
+@RequestMapping("/" + BaseRepositoryController.ENDPOINT + "/" + UserRole.TYPE_NAME)
 @Api(description = BaseRepositoryController.CRUD_ADMIN_REPOSITORY,
-        tags = RoleDefinition.TYPE_NAME)
-class AdminRoleController extends BaseRepositoryController<RoleDefinition> {
+        tags = UserRole.TYPE_NAME)
+class AdminUserRoleController extends BaseRepositoryController<UserRole> {
 
 
 }

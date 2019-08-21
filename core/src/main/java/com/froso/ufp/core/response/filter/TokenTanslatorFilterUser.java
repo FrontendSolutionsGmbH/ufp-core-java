@@ -2,7 +2,7 @@ package com.froso.ufp.core.response.filter;
 
 import com.froso.ufp.modules.core.roles.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
-import com.froso.ufp.modules.core.user.model.*;
+
 import javax.servlet.http.*;
 import java.util.*;
 
@@ -53,10 +53,10 @@ public class TokenTanslatorFilterUser extends AbstractTokenTranslatorFilter {
     protected void doValidateUserRole(Set<String> capabilities) {
 
         for(String capability:capabilities){
-            if (RoleCapabilityEnum.admin.equals(capability)) {
+            if (RoleRightsDefaultEnum.admin.equals(capability)) {
                 return;
             }
-            if (RoleCapabilityEnum.user.equals(capability)) {
+            if (RoleRightsDefaultEnum.user.equals(capability)) {
                 return;
             }
 

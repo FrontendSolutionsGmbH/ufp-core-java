@@ -8,7 +8,7 @@ import java.util.*;
  */
 
 
-public class RoleCapabilityResult extends HashSet<String> implements IDataObject {
+public class RoleRightsResult extends HashSet<String> implements IDataObject {
 
 
     private static final long serialVersionUID = -4456522918943785055L;
