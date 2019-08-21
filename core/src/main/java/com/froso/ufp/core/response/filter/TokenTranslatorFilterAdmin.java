@@ -1,9 +1,11 @@
 package com.froso.ufp.core.response.filter;
 
 import com.froso.ufp.core.*;
+import com.froso.ufp.modules.core.roles.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
 import com.froso.ufp.modules.core.user.model.*;
 import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,15 +31,18 @@ public class TokenTranslatorFilterAdmin extends AbstractTokenTranslatorFilter {
     /**
      * Validate user role.
      *
-     * @param roleString the role string
      */
     @Override
-    protected void doValidateUserRole(String roleString) {
+    protected void doValidateUserRole(Set<String> capabilities) {
 
-        UserRoleEnum role = UserRoleEnum.valueOf(roleString);
-        if (!UserRoleEnum.ROLE_ADMIN.equals(role)) {
-            throw new UserTokenException.InvalidRole();
+        for(String capability:capabilities){
+            if (RoleCapabilityEnum.admin.equals(capability)) {
+                return;
+            }
+
         }
+        throw new UserTokenException.InvalidRole();
+
     }
 
     @Override

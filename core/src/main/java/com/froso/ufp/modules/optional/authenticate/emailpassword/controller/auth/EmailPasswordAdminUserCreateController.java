@@ -77,7 +77,7 @@ public class EmailPasswordAdminUserCreateController {
                 emailPasswordAuthenticateCRUDService.save(model);
 
             } else {
-                user.setRole(UserRoleEnum.ROLE_ADMIN);
+//                user.setRole(UserRoleEnum.ROLE_ADMIN);
                 // when user exists, add role, if already existant the set() will take care of not accpeting it again
                 user.getRoles().add(roleDefinitionService.getDefaultAdminRoleLink());
             }
@@ -98,8 +98,6 @@ public class EmailPasswordAdminUserCreateController {
         ICoreUser user = (ICoreUser) coreUserService.createNewDefault();
         user.setFirstName("UFP");
         user.setLastName("ADMIN");
-        user.setRole(UserRoleEnum.ROLE_ADMIN);
-
         user.getRoles().add(roleDefinitionService.getDefaultAdminRoleLink());
         user = (ICoreUser) coreUserService.save(user);
         return user;

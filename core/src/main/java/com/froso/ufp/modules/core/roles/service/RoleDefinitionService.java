@@ -65,8 +65,8 @@ public class RoleDefinitionService extends AbstractClientRefService<RoleDefiniti
         return getOrCreateRole("user");
     }
 
-    public List<String> getAllCapabilities(Set<DataDocumentLink<RoleDefinition>> input) {
-        List<String> result = new ArrayList<>();
+    public Set<String> getAllCapabilities(Set<DataDocumentLink<RoleDefinition>> input) {
+        Set<String> result = new HashSet<>();
         for (DataDocumentLink<RoleDefinition> roleDefinitionLink : input) {
             RoleDefinition definition = findOne(roleDefinitionLink.getId());
             for (DataDocumentLink<RoleCapability> capLink : definition.getCapabilities()) {

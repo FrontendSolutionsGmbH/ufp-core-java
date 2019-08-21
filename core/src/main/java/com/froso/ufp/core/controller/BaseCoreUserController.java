@@ -90,7 +90,6 @@ public abstract class BaseCoreUserController<T extends ICoreUser> {
 
         // dont allow changing of id ...
         element.setId(null);
-        element.setRole(null);
         try {
             NullAwareBeanUtils nullAwareBeanUtils = new NullAwareBeanUtils();
             // Copy Properties from null object to object with setted designsettings

@@ -68,15 +68,9 @@ public abstract class AbstractTokenTranslatorFilter
     @Autowired
     private RoleDefinitionService roleDefinitionService;
     @Autowired
-    private RoleCapabilityService roleCapabilityService;
-    @Autowired
     private ICoreUserService userService;
-    @Autowired(required = false)
-    private ISecurityLogService securityLogService;
-
     @Autowired
     private RequestDefinitionService requestDefinitionService;
-
     @Autowired
     private IPropertyService propertyService;
 
@@ -355,54 +349,9 @@ public abstract class AbstractTokenTranslatorFilter
         // retrieve user role
 
         ICoreUser user=userService.findOneCoreUser(userID);
-List<String> capabilities=roleDefinitionService.getAllCapabilities(user.getRoles());
+Set<String> capabilities=roleDefinitionService.getAllCapabilities(user.getRoles());
+       doValidateUserRole(capabilities);
 
-        doValidateUserRole(role);
-        // perform here a logging if role is admin....
-        if (UserRoleEnum.ROLE_ADMIN.toString().equals(role) && request.getMethod().equals("POST") || request.getMethod().equals("DELETE") || request.getMethod()
-                .equals("PUT")) {
-
-            SecurityLog log = new SecurityLog();
-            log.setRequestParameters(request.getParameterMap());
-            log.setLogType(SecurityLog.LOG_TYPE_ADMIN_WRITE);
-            log.setRemoteHost(request.getRemoteHost());
-            log.setUserID(userID);
-            // log request
-
-            RequestLog requestLog = new RequestLog();
-            requestLog.setMethod(request.getMethod());
-
-
-            //   Map<String, String[]> parametermap = request.getParameterMap();
-       /*         List<StringMapArray> stringMapArrays = new ArrayList<>();
-                for (Map.Entry<String, String[]> param : parametermap.entrySet()) {
-                    StringMapArray stringMapArray = new StringMapArray();
-                    stringMapArray.setName(param.getKey());
-                    stringMapArray.getValues().addAll(Arrays.asList(param.getValue()));
-                    stringMapArrays.add(stringMapArray);
-                }
-
-                requestLog.setParameters(stringMapArrays);
-                */
-            requestLog.setUrl(request.getRequestURI());
-            Request request1 = new Request();
-
-            StringWriter writer = new StringWriter();
-            try {
-                IOUtils.copy(request.getInputStream(), writer, "UTF-8");
-            } catch (Exception e) {
-                writer.append("Problem with writing body - " + e.getMessage());
-                LOGGER.error("Problem with writing body -  ", e);
-
-            }
-            request1.setBody(writer.toString());
-            requestLog.setRequest(request1);
-            log.getRequestLog().add(requestLog);
-
-            if (null != securityLogService) {
-                securityLogService.save(log);
-            }
-        }
     }
 
 
@@ -427,9 +376,8 @@ List<String> capabilities=roleDefinitionService.getAllCapabilities(user.getRoles
     /**
      * Do validate user role.
      *
-     * @param role the role
      */
-    protected abstract void doValidateUserRole(String role);
+    protected abstract void doValidateUserRole(Set<String> capabilities);
 
     /**
      * Called by the web container to indicate to a filter that it is being taken out of service. This method is only
