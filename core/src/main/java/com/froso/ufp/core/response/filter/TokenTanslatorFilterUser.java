@@ -53,10 +53,10 @@ public class TokenTanslatorFilterUser extends AbstractTokenTranslatorFilter {
     protected void doValidateUserRole(Set<String> capabilities) {
 
         for(String capability:capabilities){
-            if (RoleRightsDefaultEnum.admin.equals(capability)) {
+            if (RoleRightsDefaultEnum.admin.toString().equals(capability)) {
                 return;
             }
-            if (RoleRightsDefaultEnum.user.equals(capability)) {
+            if (RoleRightsDefaultEnum.user.toString().equals(capability)) {
                 return;
             }
 

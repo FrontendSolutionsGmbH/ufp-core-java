@@ -6,6 +6,8 @@ import com.froso.ufp.modules.core.roles.model.*;
 
 import javax.annotation.*;
 
+import com.froso.ufp.modules.core.user.service.*;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -15,6 +17,7 @@ import java.util.*;
 public class UserRoleService extends AbstractClientRefService<UserRole> {
 
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleService.class);
     @Autowired
     private UserRightService roleRightService;
 
@@ -68,10 +71,19 @@ public class UserRoleService extends AbstractClientRefService<UserRole> {
     public Set<String> getAllRights(Set<DataDocumentLink<UserRole>> input) {
         Set<String> result = new HashSet<>();
         for (DataDocumentLink<UserRole> roleDefinitionLink : input) {
-            UserRole definition = findOne(roleDefinitionLink.getId());
-            for (DataDocumentLink<UserRight> capLink : definition.getCapabilities()) {
-                UserRight cap = roleRightService.findOne(capLink.getId());
-                result.add(cap.getName());
+            UserRole definition = findOneBrute(roleDefinitionLink.getId());
+            if(definition!=null) {
+                for (DataDocumentLink<UserRight> capLink : definition.getCapabilities()) {
+                    UserRight cap = roleRightService.findOneBrute(capLink.getId());
+                    if(cap!=null) {
+                        result.add(cap.getName());
+                    }else{
+                        LOGGER.warn("User role {} right {} not found",roleDefinitionLink.getId(),capLink.getId());
+
+                    }
+                }
+            }else{
+                LOGGER.warn("User role {} not found",roleDefinitionLink.getId());
             }
         }
         return result;

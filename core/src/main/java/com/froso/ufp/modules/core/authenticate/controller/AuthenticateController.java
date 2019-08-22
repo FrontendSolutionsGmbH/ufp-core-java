@@ -49,13 +49,6 @@ public class AuthenticateController {
             throw new UFPRuntimeException("No User Session found");
         }
 
-        // retrieve user for roles
-        ICoreUser user=(ICoreUser) userService.findOne(userId);
-        Set<String> rights =      userRoleService.getAllRights(user.getRoles());
-
-        session.setRights(rights);
-        session.setFirstName(user.getFirstName());
-        session.setLastName(user.getLastName());
         manager.addResult(session);
 
         return manager.getResponseEntity();

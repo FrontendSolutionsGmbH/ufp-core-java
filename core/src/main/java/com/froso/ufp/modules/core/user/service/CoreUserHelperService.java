@@ -1,7 +1,9 @@
 package com.froso.ufp.modules.core.user.service;
 
+import com.froso.ufp.core.configuration.*;
 import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
+import com.froso.ufp.modules.core.roles.service.*;
 import com.froso.ufp.modules.core.session.interfaces.*;
 import com.froso.ufp.modules.core.session.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
@@ -22,24 +24,26 @@ import org.springframework.stereotype.*;
  */
 @Service
 public class CoreUserHelperService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreUserHelperService.class);
     public static final String TOKENIDENTIFIER_TIME = "t";
     public static final String TOKENIDENTIFIER_USERID = "u";
     public static final int ONCE_PER_SESSION_RANDOM_STRING_LENGTH = 16;
     private static final String TOKENIDENTIFIER_RETAIL = "r";
     private static final String TOKENIDENTIFIER_ROLE = "ro";
     //get log4j handler
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoreUserHelperService.class);
     private static final Object safer = new Object();
     private static String oncePerSessionRandomKey;
     private final IPropertyService propertyService;
     private final ISessionService sessionService;
+    private final UserRoleService userRoleService;
     private final ICoreUserService<ICoreUser> coreUserService;
 
     @Autowired
-    public CoreUserHelperService(IPropertyService propertyService, ISessionService sessionService, ICoreUserService<ICoreUser> coreUserService) {
+    public CoreUserHelperService(IPropertyService propertyService, ISessionService sessionService, ICoreUserService<ICoreUser> coreUserService,UserRoleService roleService) {
         this.propertyService = propertyService;
         this.sessionService = sessionService;
         this.coreUserService = coreUserService;
+        this.userRoleService=roleService;
     }
 
     /**
@@ -143,6 +147,12 @@ public class CoreUserHelperService {
         // And create new session
         Session session = sessionService.getDefault();
         session.getUserLink().setId(coreUser.getId());
+
+        // store rights upon login
+        session.setRights(userRoleService.getAllRights(coreUser.getRoles()));
+        // store user first and lastname in session as well
+        session.setFirstName(coreUser.getFirstName());
+        session.setLastName(coreUser.getLastName());
 
         //   session.setDeviceCient(RequestHeaderRetriever.getCurrentClient());
 
