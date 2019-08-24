@@ -47,21 +47,21 @@ public class FilterRegistration {
         return registrationBean;
     }
 
-    @Bean
-    public FilterRegistrationBean<CharacterEncodingFilter> characterEncodingFilter() {
-        FilterRegistrationBean<CharacterEncodingFilter> registrationBean = new FilterRegistrationBean<>();
-
-        registrationBean.setFilter(new CharacterEncodingFilter());
-        Map<String, String> params = new HashMap<>();
-        params.put("encoding", "UTF-8");
-        params.put("forceEncoding", "true");
-        registrationBean.setName("Api-Filter-CharacterEncoding");
-        registrationBean.setInitParameters(params);
-        registrationBean.addUrlPatterns("/" + UFPConstants.API + "/*");
-        registrationBean.setOrder(2);
-
-        return registrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean<CharacterEncodingFilter> characterEncodingFilter() {
+//        FilterRegistrationBean<CharacterEncodingFilter> registrationBean = new FilterRegistrationBean<>();
+//
+//        registrationBean.setFilter(new CharacterEncodingFilter());
+//        Map<String, String> params = new HashMap<>();
+//        params.put("encoding", "UTF-8");
+//        params.put("forceEncoding", "true");
+//        registrationBean.setName("Api-Filter-CharacterEncoding");
+//        registrationBean.setInitParameters(params);
+//        registrationBean.addUrlPatterns("/" + UFPConstants.API + "/*");
+//        registrationBean.setOrder(2);
+//
+//        return registrationBean;
+//    }
 
     @Bean
     public FilterRegistrationBean<TokenValidatorFilter> tokenValidatorFilter() {
