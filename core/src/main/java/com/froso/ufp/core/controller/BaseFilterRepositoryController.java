@@ -7,33 +7,26 @@ import com.froso.ufp.core.domain.documents.simple.plain.*;
 import com.froso.ufp.core.domain.interfaces.*;
 import com.froso.ufp.core.exceptions.*;
 import com.froso.ufp.core.response.*;
-import com.froso.ufp.core.response.filter.*;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.core.service.operations.*;
 import com.froso.ufp.modules.core.session.service.*;
 import com.froso.ufp.modules.core.user.model.*;
 import io.swagger.annotations.*;
-import org.apache.commons.io.*;
-import org.apache.commons.lang.exception.*;
-import org.joda.time.*;
-import org.joda.time.format.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.mongodb.core.mapreduce.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.*;
 
 import javax.servlet.http.*;
-import java.io.*;
 import java.util.*;
 
-public abstract class BaseRepositoryController<T extends IDataDocument> {
+public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
     public static final String CRUD_ADMIN_REPOSITORY = "CRUD Admin Repository";
     public static final String ENDPOINT = UFPConstants.ADMIN_FULL + "/{token}";
     public static final String GROUP_ID = "groupingKeyFunction";
     public static final String DEFAULT_NEW = "newDefault";
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseFilterRepositoryController.class);
     @Autowired
     protected RepositoryService<T> service;
     @Autowired
@@ -44,7 +37,7 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
      * favoring constructor autowiring/dependency injection over field injection now, following style guide of spring
      */
     @Deprecated
-    public BaseRepositoryController() {
+    public BaseFilterRepositoryController() {
         LOGGER.debug("Using deprecated constructor, please use constructor based autowiring");
     }
 
@@ -54,7 +47,7 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
      * @param service
      * @param objectMapper
      */
-    public BaseRepositoryController(RepositoryService<T> service, ObjectMapper objectMapper) {
+    public BaseFilterRepositoryController(RepositoryService<T> service, ObjectMapper objectMapper) {
         this.service = service;
         this.objectMapper = objectMapper;
     }
@@ -88,6 +81,8 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
         }
         return result;
     }
+
+    public abstract Map<String, String> filter(String userId);
 
     @Autowired(required = false)
     public void setDependencySessionService(SessionService sessionService) {
@@ -199,139 +194,12 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
             @PathVariable("token")
                     String userId, HttpServletRequest request) {
         Map<String, String> allRequestParams = getSingleParameterValueMapFromRequest(request);
+
+        allRequestParams.putAll(filter(userId));
+
         ResponseHandlerTemplate manager = new ResponseHandlerTemplate<>(request);
         IDataObjectList<T> searchresult = service.searchPaged(allRequestParams);
         manager.addResult(searchresult);
-        return manager.getResponseEntity();
-    }
-
-    /**
-     * Gets elements json array
-     *
-     * @param userId   the user id
-     * @param response the response
-     * @param request  the request
-     * @return the elements as export
-     * @throws Exception the exception
-     */
-    @ApiOperation(value = "exports the dataset in JSON format",
-            notes = "The whole collection is exported as JSON. This file can be later used to reimport it via the /import endpoint" +
-                    SwaggerDocSnippets.RESPONSE_START +
-                    SwaggerDocSnippets.ERROR_TOKEN_INVALID +
-                    SwaggerDocSnippets.ERROR_NO_READ_PRIVILEGE +
-                    SwaggerDocSnippets.FILTER_RULE +
-                    SwaggerDocSnippets.RESPONSE_END)
-    @RequestMapping(value = "/export",
-            method = RequestMethod.GET)
-    @ResponseBody
-    public List<T> exportElements(
-            @PathVariable("token")
-                    String userId, HttpServletResponse response, HttpServletRequest request) {
-        LOGGER.info("Exporting " + getTypeName() + " for user " + userId);
-        Map<String, String> allRequestParams = getSingleParameterValueMapFromRequest(request);
-        List<T> result = service.search(allRequestParams);
-        response.setContentType("application/json");
-        response.addHeader("Content-Type", "application/json");
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("YYYY-MM-dd-HH-mm");
-        String add = "";
-        Map<String, String> cleaned = service.cleanInputRequestParamsFromEverything(allRequestParams);
-        if (!cleaned.isEmpty()) {
-            add = "-FILTERED";
-        }
-        response.addHeader("Content-Disposition", "form-data; name=\"attachment\"; filename=\"" + service.getTypeName() + "-" + fmt.print(DateTime.now()) + add + ".json\"");
-        return result;
-    }
-
-    /**
-     * Import default.
-     *
-     * @throws IOException the io exception
-     */
-//    public void importDefault() throws IOException {
-//        service.importFromFileRessource("default/" + service.getTypeName().toLowerCase() + ".json");
-//    }
-    /**
-     * Load defaults response entity.
-     *
-     * @param token    the token
-     * @param request  the request
-     * @param response the response
-     * @return the response entity
-     * @throws IOException the io exception
-     */
-    /*
-    @ApiOperation(value = "imports a default data set (if defined in service)", notes = "If the corresponding Service associated to this controller has implemented a importDefault() method, this collection will be reset to that (or empty) ." +
-            SwaggerDocSnippets.RESPONSE_START +
-            SwaggerDocSnippets.ERROR_TOKEN_INVALID +
-            SwaggerDocSnippets.ERROR_NO_CREATE_PRIVILEGE_PRIVILEGE +
-            SwaggerDocSnippets.RESPONSE_END)
-    @RequestMapping(value = "/LoadDefault", method = RequestMethod.POST)
-    public ResponseEntity<BackendResponse> importDefaults(@PathVariable String token, MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        ResponseHandlerTemplate manager = new ResponseHandlerTemplate<>(request);
-
-
-        service.importDefault();
-
-        return manager.getResponseEntity();
-
-    }
-*/
-
-    /**
-     * Load elements from multi par.
-     *
-     * @param token    the token
-     * @param file     the file
-     * @param request  the request
-     * @param response the response
-     * @return the response entity
-     * @throws IOException the iO exception
-     */
-    @ApiOperation(value = "imports full collection from JSON",
-            notes = "A JSON file obtained through /export may be uploaded here and add its contents to current database collection." +
-                    SwaggerDocSnippets.RESPONSE_START +
-                    SwaggerDocSnippets.ERROR_TOKEN_INVALID +
-                    SwaggerDocSnippets.ERROR_NO_UPDATE_PRIVILEGE +
-                    SwaggerDocSnippets.RESPONSE_END)
-    @RequestMapping(value = "/import",
-            method = RequestMethod.POST)
-    public ResponseEntity<BackendResponseTemplateEmpty> importElements(
-            @PathVariable
-                    String token,
-            @RequestParam(value = "file")
-                    MultipartFile file,
-            MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
-        ResponseHandlerTemplateEmpty manager = new ResponseHandlerTemplateEmpty(request);
-        manager.addMessage("Importing JSON from " + file.getName());
-        manager.addMessage("Size " + file.getBytes().length + " Bytes");
-        manager.addMessage("Importing JSON from " + file.getName());
-        try {
-            int rowcount = 0;
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(file.getInputStream(), writer, "UTF-8");
-            String theString = writer.toString();
-            if (theString.indexOf(HMACOutputFilter.SECURITY_PREFIX) == 1) {
-                // remove security prefix
-                theString = theString.substring(HMACOutputFilter.SECURITY_PREFIX.length());
-            }
-            List<HashMap> myObjects = objectMapper.readValue(theString, objectMapper.getTypeFactory().constructCollectionType(List.class, HashMap.class));
-            for (HashMap element : myObjects) {
-                try {
-                    T item = objectMapper.convertValue(element, service.getClassOfRepository());
-                    service.save(item);
-                } catch (Exception e) {
-                    LOGGER.error("Import Error", e);
-                }
-                rowcount++;
-
-            }
-            manager.addMessage("Imported rows: " + rowcount);
-        } catch (IOException e) {
-            manager.addMessage("Error importing " + ExceptionUtils.getRootCauseMessage(e));
-            LOGGER.error("Error importing ", e);
-            manager.setStatus(ResultStatusEnumCode.ERROR_IMPORT);
-        }
         return manager.getResponseEntity();
     }
 
@@ -364,6 +232,7 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
 
             T newDefault = service.createNewDefault();
             newDefault.getMetaData().setCreatorUserLink(new DataDocumentLink<ICoreUser>(userId));
+            fillDefaultObject(newDefault);
             manager.addResult(newDefault);
         } else {
             // Get Element
@@ -454,9 +323,9 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
                 throw new UFPRuntimeException(ResultStatusEnumCode.ERROR_MONGODB_DUPLICATEKEY);
             }
 
-            dataInParsed.getMetaData().getCreatorUserLink().setId(userId);
+            dataInParsed.getMetaData().getCreatorUserLink().setId(getUserIDFromToken(userId));
             fillDefaultObject(dataInParsed);
-            dataInParsed.getMetaData().getCreatorUserLink().setId(userId);
+            dataInParsed.getMetaData().getCreatorUserLink().setId(getUserIDFromToken(userId));
             dataInParsed = service.save(dataInParsed);
             manager.addResult(dataInParsed);
         } else {
@@ -514,36 +383,6 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
     }
 
     /**
-     * Delete elements response entity.
-     *
-     * @param userID  the user id
-     * @param request the request
-     * @return response entity
-     * @throws Exception the exception
-     */
-    @ApiOperation(value = "deletes full collection ",
-            notes = "Deletes All Elements of TYPE. Each element is deleted one by one, performing all events associated to that tasks." +
-                    SwaggerDocSnippets.RESPONSE_START +
-                    SwaggerDocSnippets.ERROR_TOKEN_INVALID +
-                    SwaggerDocSnippets.ERROR_NO_DELETE_PRIVILEGE +
-                    SwaggerDocSnippets.FILTER_RULE +
-                    SwaggerDocSnippets.RESPONSE_END)
-    @RequestMapping(value = "",
-            method = RequestMethod.DELETE)
-    public ResponseEntity<BackendResponseTemplateEmpty> deleteElements(
-            @PathVariable("token")
-                    String userID, HttpServletRequest request) {
-        Map<String, String> allRequestParams = getSingleParameterValueMapFromRequest(request);
-        ResponseHandlerTemplateEmpty manager = new ResponseHandlerTemplateEmpty(request);
-        // fixme: move to service
-        List<T> listTODelete = service.search(allRequestParams);
-        for (T element : listTODelete) {
-            service.delete(element);
-        }
-        return manager.getResponseEntity();
-    }
-
-    /**
      * post on the resource itself creates a new object and returns it ;)ab
      *
      * @param userId  the user id
@@ -588,39 +427,5 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
     protected void fillDefaultObject(T object) {
         // template method to create a new object of type T
     }
-
-//
-//    /**
-//     * View response entity.
-//     *
-//     * @param userId  the user id
-//     * @param newItem the new item
-//     * @param request the request
-//     * @return the response entity
-//     */
-//    @ApiOperation(value = "view",
-//            notes = "")
-//    @RequestMapping(value = "/view/{name}",
-//            method = RequestMethod.GET)
-//    public ResponseEntity<BackendResponseTemplateSingleObject<T>> view(
-//            @PathVariable("token")
-//                    String userId,
-//            @RequestBody(required = false)
-//                    T newItem,
-//            HttpServletRequest request) {
-//        ResponseHandlerTemplateSingleObject manager = new ResponseHandlerTemplateSingleObject<>(request);
-//        T element = null;
-//        if (newItem == null) {
-//            element = service.createNewDefault();
-//        } else {
-//            element = newItem;
-//        }
-//        if (element != null) {
-//            element.getMetaData().getCreatorUserLink().setId(getUserIDFromToken(userId));
-//            service.save(element);
-//        }
-//        manager.addResult(element);
-//        return manager.getResponseEntity();
-//    }
 
 }

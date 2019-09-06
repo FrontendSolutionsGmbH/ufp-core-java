@@ -29,11 +29,7 @@ import java.io.*;
 import java.nio.charset.*;
 import java.util.*;
 
-/**
- * The type Image service.
- */
 @Service
-
 public class TemplateService extends AbstractFileServiceLocalFilesSystem<FileTemplate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateService.class);

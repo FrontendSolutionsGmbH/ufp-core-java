@@ -12,12 +12,6 @@ import java.util.*;
  * @param <T> the type parameter
  */
 public interface FileService<T extends com.froso.ufp.modules.optional.media.model.UfpFile> extends RepositoryService<T> {
-    /**
-     * Gets name.
-     *
-     * @return the name
-     */
-    String getName();
 
     /**
      * Gets by array ressource.
@@ -48,17 +42,13 @@ public interface FileService<T extends com.froso.ufp.modules.optional.media.mode
      */
     String getFullPathForMediaOriginal(T media, String targetFileName);
 
-
 //    T updateElemtFromInputStreamProtected(String id, String url, InputStream inputStream, String suggestedID) throws IOException;
 
-
     T updateElemtFromInputStream(String id, String url, InputStream inputStream, String suggestedID) throws IOException;
-
 
     T updateElemtFromInputStreamThreaded(String id, String url, InputStream stream, String suggestedID) throws IOException;
 
     T createElemtFromInputStream(String url, InputStream stream, String suggestedID) throws IOException;
-
 
 //    T createElemtFromInputStreamProtected(String url, InputStream stream, String suggestedID) throws IOException;
 
