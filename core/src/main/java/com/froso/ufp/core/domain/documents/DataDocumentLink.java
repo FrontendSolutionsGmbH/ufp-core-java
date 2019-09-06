@@ -141,8 +141,7 @@ public class DataDocumentLink<T> implements IDataDocumentLink<T>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DataDocumentLink<?> that = (DataDocumentLink<?>) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(resourceName, that.resourceName);
+        return Objects.equals(id, that.id);
     }
 
     @Override
