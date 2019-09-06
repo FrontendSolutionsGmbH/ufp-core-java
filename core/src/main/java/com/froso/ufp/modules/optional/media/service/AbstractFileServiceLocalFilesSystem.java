@@ -2,7 +2,6 @@ package com.froso.ufp.modules.optional.media.service;
 
 import com.froso.ufp.core.configuration.*;
 import com.froso.ufp.core.domain.documents.*;
-import com.froso.ufp.core.domain.interfaces.*;
 import com.froso.ufp.core.exceptions.*;
 import com.froso.ufp.modules.core.applicationproperty.service.*;
 import com.froso.ufp.modules.core.client.service.*;
@@ -39,16 +38,13 @@ import java.util.*;
  *
  * @param <T> the type parameter
  */
-abstract public class AbstractFileServiceLocalFilesSystem<T extends UfpFile> extends AbstractClientRefService<T> implements INamedObject, FileService<T> {
+abstract public class AbstractFileServiceLocalFilesSystem<T extends UfpFile> extends AbstractClientRefService<T> implements FileService<T> {
 
     /**
      * The constant FILE_PROP_NAME_ROOT.
      */
     public static final String FILE_PROP_NAME_ROOT = "ufp.controller.files";
-    /**
-     * The constant TYPE_NAME.
-     */
-    public static final String NAME = "MediaService";
+
     /**
      * The constant WORKING.
      */
@@ -139,30 +135,20 @@ abstract public class AbstractFileServiceLocalFilesSystem<T extends UfpFile> ext
 
     }
 
-    protected String getConfigBasePathPropertyName() {
+    public String getConfigBasePathPropertyName() {
         return FILE_PROP_NAME_ROOT + "." + typeName.toLowerCase() + ".filesystem.root";
     }
 
-    protected String getPublicUrlBasePathPropertyName() {
+    public String getPublicUrlBasePathPropertyName() {
         return FILE_PROP_NAME_ROOT + "." + typeName.toLowerCase() + ".filesystem.publicurl";
     }
 
-    protected String getPublicUrl() {
-
+    public String getPublicUrl() {
         return applicationPropertyService.getPropertyValue(getPublicUrlBasePathPropertyName());
-
     }
 
-    protected String getBasePath() {
-
+    public String getBasePath() {
         return applicationPropertyService.getPropertyValue(getConfigBasePathPropertyName());
-
-    }
-
-    public String getName() {
-
-        return NAME;
-
     }
 
     protected void postProcess(T file) {
@@ -358,7 +344,7 @@ abstract public class AbstractFileServiceLocalFilesSystem<T extends UfpFile> ext
 
         if (!isFileExistant(getBasePath() + File.separator + file.getId())) {
             LOGGER.info("Creating Path " + getBasePath() + File.separator + file.getId());
-            makeDir(getBasePath() + File.separator + getName() + File.separator + file.getId());
+            makeDir(getBasePath() + File.separator + file.getId());
         }
     }
 

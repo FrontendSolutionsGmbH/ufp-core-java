@@ -4,6 +4,7 @@ import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
 import com.froso.ufp.modules.core.authenticate.model.*;
 import com.froso.ufp.modules.core.globals.interfaces.*;
+import com.froso.ufp.modules.core.roles.service.*;
 import com.froso.ufp.modules.core.user.model.*;
 import com.froso.ufp.modules.core.user.service.*;
 import org.slf4j.*;
@@ -22,19 +23,22 @@ public class AuthenticationsService extends AbstractResourcesService<Authenticat
     private final IPropertyService propertyService;
     private final ICoreUserService coreUserService;
     private final CoreUserHelperService coreUserHelperService;
+    private final UserRoleService userRoleService;
     private final GlobalsService globalsService;
 
     @Autowired
     public AuthenticationsService(IPropertyService propertyService,
                                   ICoreUserService coreUserService,
                                   CoreUserHelperService coreUserHelperService,
-                                  GlobalsService globalsService, ServiceService serviceService) {
+                                  GlobalsService globalsService,
+                                  ServiceService serviceService,
+                                  UserRoleService userRoleService) {
         super(serviceService);
         this.coreUserHelperService = coreUserHelperService;
         this.globalsService = globalsService;
         this.propertyService = propertyService;
         this.coreUserService = coreUserService;
-
+        this.userRoleService=userRoleService;
     }
 
     public Boolean isAutoRegisterEnabled() {
@@ -70,11 +74,8 @@ public class AuthenticationsService extends AbstractResourcesService<Authenticat
     public TokenData finalizeAuthorization(IDataDocumentWithCoreUserLink element) {
 
         ICoreUser loggedInCoreUser = (ICoreUser) coreUserService.findOne(element.getCoreUser().getId());
-        if (loggedInCoreUser == null) {
-            throw new UFPAuthenticateException.AuthNotValidatedException();
-        }
-        coreUserHelperService.transformUserToCryptonizedID(loggedInCoreUser);
-        return new TokenData(loggedInCoreUser.getId());
+
+return finalizeAuthorization(loggedInCoreUser);
     }
 
     public TokenData finalizeAuthorization(ICoreUser loggedInCoreUser) {
@@ -83,7 +84,12 @@ public class AuthenticationsService extends AbstractResourcesService<Authenticat
             throw new UFPAuthenticateException.AuthNotValidatedException();
         }
         coreUserHelperService.transformUserToCryptonizedID(loggedInCoreUser);
-        return new TokenData(loggedInCoreUser.getId());
+        TokenData data= new TokenData(loggedInCoreUser.getId());
+        data.setFirstName(loggedInCoreUser.getFirstName());
+        data.setFirstName(loggedInCoreUser.getLastName());
+        data.setRights(userRoleService.getAllRights( loggedInCoreUser.getRoles()));
+
+        return data;
     }
 
     public Map<String, List<Authentication>> getAllAuthenticationsForCoreUser(String coreUserId) {

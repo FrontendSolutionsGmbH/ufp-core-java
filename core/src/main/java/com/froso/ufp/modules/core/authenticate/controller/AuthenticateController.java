@@ -3,8 +3,11 @@ package com.froso.ufp.modules.core.authenticate.controller;
 import com.froso.ufp.core.exceptions.*;
 import com.froso.ufp.core.response.*;
 import com.froso.ufp.modules.core.authenticate.model.*;
+import com.froso.ufp.modules.core.roles.service.*;
 import com.froso.ufp.modules.core.session.model.*;
 import com.froso.ufp.modules.core.session.service.*;
+import com.froso.ufp.modules.core.user.model.*;
+import com.froso.ufp.modules.core.user.service.*;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * The type Authenticate controller.
@@ -21,18 +25,18 @@ import javax.servlet.http.*;
 @Api(description = UFPAuthenticateConstants.AUTHENTICATION_RESOURCE_DESCRIPTION, tags = UFPAuthenticateConstants.AUTHENTICATION)
 public class AuthenticateController {
 
+    private final SessionService sessionService;
+    private final ICoreUserService userService;
+    private final UserRoleService userRoleService;
+
     @Autowired
-    private SessionService sessionService;
+    public AuthenticateController(SessionService sessionService, ICoreUserService userService, UserRoleService userRoleService) {
+        this.sessionService = sessionService;
+        this.userService = userService;
+        this.userRoleService = userRoleService;
+    }
 
-    /**
-     * Gets session info.
-     *
-     * @param userId  the user id
-     * @param request the request
-     * @return the session info
-     */
     @ApiOperation(value = "get current session authenticate controller")
-
     @RequestMapping(value = "{token}", method = RequestMethod.GET)
     @ResponseBody
     public final ResponseEntity<BackendResponseTemplate3SingleObject<Session, SessionResponseStatusTyped>> getSessionInfo(
@@ -44,6 +48,7 @@ public class AuthenticateController {
         if (session == null) {
             throw new UFPRuntimeException("No User Session found");
         }
+
         manager.addResult(session);
 
         return manager.getResponseEntity();

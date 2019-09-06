@@ -50,20 +50,20 @@ public class CoreUser
     private Boolean active = Boolean.FALSE;
     @ApiModelProperty(hidden = false)
     private Boolean blocked = Boolean.FALSE;
-    @TextIndexed
-    private UserRoleEnum role = UserRoleEnum.ROLE_GUEST;
-    private Set<DataDocumentLink<RoleDefinition>> roles = new HashSet<DataDocumentLink<RoleDefinition>>();
+//    @TextIndexed
+//    private UserRoleEnum role = UserRoleEnum.ROLE_GUEST;
+    private Set<DataDocumentLink<UserRole>> roles = new HashSet<DataDocumentLink<UserRole>>();
 
     public CoreUser() {
         super(TYPE_NAME);
     }
 
     @Override
-    public Set<DataDocumentLink<RoleDefinition>> getRoles() {
+    public Set<DataDocumentLink<UserRole>> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<DataDocumentLink<RoleDefinition>> roles) {
+    public void setRoles(Set<DataDocumentLink<UserRole>> roles) {
         this.roles = roles;
     }
 
@@ -85,16 +85,6 @@ public class CoreUser
     @Override
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    @Override
-    public UserRoleEnum getRole() {
-        return role;
-    }
-
-    public void setRole(UserRoleEnum role) {
-
-        this.role = role;
     }
 
     @Override

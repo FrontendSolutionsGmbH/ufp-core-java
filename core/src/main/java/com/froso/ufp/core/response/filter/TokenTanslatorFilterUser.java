@@ -1,8 +1,10 @@
 package com.froso.ufp.core.response.filter;
 
+import com.froso.ufp.modules.core.roles.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
-import com.froso.ufp.modules.core.user.model.*;
+
 import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,13 +50,18 @@ public class TokenTanslatorFilterUser extends AbstractTokenTranslatorFilter {
      * @param roleString the role string
      */
     @Override
-    protected void doValidateUserRole(String roleString) {
+    protected void doValidateUserRole(Set<String> capabilities) {
 
-        UserRoleEnum role = UserRoleEnum.valueOf(roleString);
-        // grant access if user or admin
-        if (!(UserRoleEnum.ROLE_ADMIN.equals(role) || UserRoleEnum.ROLE_USER.equals(role) || UserRoleEnum.ROLE_GUEST.equals(role))) {
-            throw new UserTokenException.InvalidRole();
+        for(String capability:capabilities){
+            if (RoleRightsDefaultEnum.admin.toString().equals(capability)) {
+                return;
+            }
+            if (RoleRightsDefaultEnum.user.toString().equals(capability)) {
+                return;
+            }
+
         }
+        throw new UserTokenException.InvalidRole();
     }
 
     @Override

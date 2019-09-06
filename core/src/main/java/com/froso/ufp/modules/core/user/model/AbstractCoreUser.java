@@ -34,7 +34,7 @@ public abstract class AbstractCoreUser
         extends AbstractDataDocumentWithClientLink implements ICoreUser {
 
     private CounterConsumer counters = new CounterConsumer();
-    private Set<DataDocumentLink<RoleDefinition>> roles = new HashSet<DataDocumentLink<RoleDefinition>>();
+    private Set<DataDocumentLink<UserRole>> roles = new HashSet<DataDocumentLink<UserRole>>();
     @ApiModelProperty(hidden = false, example = "true")
     private Boolean active = Boolean.TRUE;
     @ApiModelProperty(hidden = false, example = "false")
@@ -56,7 +56,7 @@ public abstract class AbstractCoreUser
      * The constant TYPE_NAME.
      */
     // public static final String TYPE_NAME = "CoreUser";
-    public Set<DataDocumentLink<RoleDefinition>> getRoles() {
+    public Set<DataDocumentLink<UserRole>> getRoles() {
         return roles;
     }
 
@@ -65,28 +65,10 @@ public abstract class AbstractCoreUser
      *
      * @param roles the roles
      */
-    public void setRoles(Set<DataDocumentLink<RoleDefinition>> roles) {
+    public void setRoles(Set<DataDocumentLink<UserRole>> roles) {
         this.roles = roles;
     }
 
-    /**
-     * Gets role.
-     *
-     * @return the role
-     */
-    @Override
-    public UserRoleEnum getRole() {
-        return role;
-    }
-
-    /**
-     * Sets role.
-     *
-     * @param role the role
-     */
-    public void setRole(UserRoleEnum role) {
-        this.role = role;
-    }
 
     /**
      * Gets counters.

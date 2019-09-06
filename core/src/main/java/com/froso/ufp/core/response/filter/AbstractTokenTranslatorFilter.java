@@ -7,18 +7,18 @@ import com.froso.ufp.core.response.*;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
+import com.froso.ufp.modules.core.roles.service.*;
 import com.froso.ufp.modules.core.session.interfaces.*;
 import com.froso.ufp.modules.core.session.model.*;
 import com.froso.ufp.modules.core.user.exception.*;
 import com.froso.ufp.modules.core.user.model.*;
 import com.froso.ufp.modules.core.user.service.*;
-import com.froso.ufp.modules.optional.securitylog.interfaces.*;
-import com.froso.ufp.modules.optional.securitylog.model.*;
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.apache.commons.io.*;
+
 import org.joda.time.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -65,13 +65,11 @@ public abstract class AbstractTokenTranslatorFilter
     @Autowired
     private ISessionService sessionService;
     @Autowired
-    private ICoreUserService entiteitService;
-    @Autowired(required = false)
-    private ISecurityLogService securityLogService;
-
+    private UserRoleService userRoleService;
+    @Autowired
+    private ICoreUserService userService;
     @Autowired
     private RequestDefinitionService requestDefinitionService;
-
     @Autowired
     private IPropertyService propertyService;
 
@@ -239,7 +237,7 @@ public abstract class AbstractTokenTranslatorFilter
                 throw new UserTokenException("Token not found!");
             }
 
-            ICoreUser coreUser = (ICoreUser) entiteitService.findOneBrute(session.getUserLink().getId());
+            ICoreUser coreUser = (ICoreUser) userService.findOneBrute(session.getUserLink().getId());
             if (coreUser == null) {
                 throw new UserTokenException("CoreUser not found!");
 
@@ -276,7 +274,7 @@ public abstract class AbstractTokenTranslatorFilter
             // And finally perform a role check ( preliminary according to encrypted role in token!  )
 
 
-            validateUserRole(coreUser.getId(), coreUser.getRole().toString(), (HttpServletRequest) request);
+            validateUserRights(coreUser.getId(), (HttpServletRequest) request);
             request.getRequestDispatcher(urlStringBuilder.toString()).forward(request, response);
             // refactor if needed, but return right now ( do not send dofilter and forward at the
             // same time!
@@ -343,58 +341,15 @@ public abstract class AbstractTokenTranslatorFilter
      * Validate user role.
      *
      * @param userID  the user id
-     * @param role    the role
      * @param request the request
      */
-    protected void validateUserRole(String userID, String role, HttpServletRequest request) {
+    protected void validateUserRights(String userID, HttpServletRequest request) {
 
-        doValidateUserRole(role);
-        // perform here a logging if role is admin....
-        if (UserRoleEnum.ROLE_ADMIN.toString().equals(role) && request.getMethod().equals("POST") || request.getMethod().equals("DELETE") || request.getMethod()
-                .equals("PUT")) {
-
-            SecurityLog log = new SecurityLog();
-            log.setRequestParameters(request.getParameterMap());
-            log.setLogType(SecurityLog.LOG_TYPE_ADMIN_WRITE);
-            log.setRemoteHost(request.getRemoteHost());
-            log.setUserID(userID);
-            // log request
-
-            RequestLog requestLog = new RequestLog();
-            requestLog.setMethod(request.getMethod());
-
-
-            //   Map<String, String[]> parametermap = request.getParameterMap();
-       /*         List<StringMapArray> stringMapArrays = new ArrayList<>();
-                for (Map.Entry<String, String[]> param : parametermap.entrySet()) {
-                    StringMapArray stringMapArray = new StringMapArray();
-                    stringMapArray.setName(param.getKey());
-                    stringMapArray.getValues().addAll(Arrays.asList(param.getValue()));
-                    stringMapArrays.add(stringMapArray);
-                }
-
-                requestLog.setParameters(stringMapArrays);
-                */
-            requestLog.setUrl(request.getRequestURI());
-            Request request1 = new Request();
-
-            StringWriter writer = new StringWriter();
-            try {
-                IOUtils.copy(request.getInputStream(), writer, "UTF-8");
-            } catch (Exception e) {
-                writer.append("Problem with writing body - " + e.getMessage());
-                LOGGER.error("Problem with writing body -  ", e);
-
-            }
-            request1.setBody(writer.toString());
-            requestLog.setRequest(request1);
-            log.getRequestLog().add(requestLog);
-
-            if (null != securityLogService) {
-                securityLogService.save(log);
-            }
+        // retrieve user role
+        ICoreUser user=userService.findOneCoreUser(userID);
+        Set<String> capabilities= userRoleService.getAllRights(user.getRoles());
+            doValidateUserRole(capabilities);
         }
-    }
 
 
     private void verifyTime(String input) {
@@ -418,9 +373,8 @@ public abstract class AbstractTokenTranslatorFilter
     /**
      * Do validate user role.
      *
-     * @param role the role
      */
-    protected abstract void doValidateUserRole(String role);
+    protected abstract void doValidateUserRole(Set<String> capabilities);
 
     /**
      * Called by the web container to indicate to a filter that it is being taken out of service. This method is only

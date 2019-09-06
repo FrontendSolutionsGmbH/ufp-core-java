@@ -1,6 +1,8 @@
 # UFP Core
  
- # unreleased
+ # 2.x
+ 
+    - remove user role enum in favour of rights/roles resource
  
  # 1.0.6 
  

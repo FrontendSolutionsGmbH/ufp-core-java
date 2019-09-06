@@ -29,16 +29,16 @@ public class EmailPasswordAdminUserCreateController {
 
     private final ICoreUserService coreUserService;
     private final IPropertyService propertyService;
-    private final RoleDefinitionService roleDefinitionService;
+    private final UserRoleService userRoleService;
 
     private final EmailPasswordAuthenticateService emailPasswordAuthenticateService;
     private final EmailPasswordAuthenticateCRUDService emailPasswordAuthenticateCRUDService;
 
     @Autowired
-    public EmailPasswordAdminUserCreateController(IPropertyService propertyService, ICoreUserService coreUserService, RoleDefinitionService roleDefinitionService, EmailPasswordAuthenticateService emailPasswordAuthenticateService, EmailPasswordAuthenticateCRUDService emailPasswordAuthenticateCRUDService) {
+    public EmailPasswordAdminUserCreateController(IPropertyService propertyService, ICoreUserService coreUserService, UserRoleService userRoleService, EmailPasswordAuthenticateService emailPasswordAuthenticateService, EmailPasswordAuthenticateCRUDService emailPasswordAuthenticateCRUDService) {
         this.propertyService = propertyService;
         this.coreUserService = coreUserService;
-        this.roleDefinitionService = roleDefinitionService;
+        this.userRoleService = userRoleService;
         this.emailPasswordAuthenticateService = emailPasswordAuthenticateService;
         this.emailPasswordAuthenticateCRUDService = emailPasswordAuthenticateCRUDService;
     }
@@ -77,9 +77,9 @@ public class EmailPasswordAdminUserCreateController {
                 emailPasswordAuthenticateCRUDService.save(model);
 
             } else {
-                user.setRole(UserRoleEnum.ROLE_ADMIN);
+//                user.setRole(UserRoleEnum.ROLE_ADMIN);
                 // when user exists, add role, if already existant the set() will take care of not accpeting it again
-                user.getRoles().add(roleDefinitionService.getDefaultAdminRoleLink());
+                user.getRoles().add(userRoleService.getDefaultAdminRoleLink());
             }
 
             coreUserService.save(user);
@@ -98,9 +98,7 @@ public class EmailPasswordAdminUserCreateController {
         ICoreUser user = (ICoreUser) coreUserService.createNewDefault();
         user.setFirstName("UFP");
         user.setLastName("ADMIN");
-        user.setRole(UserRoleEnum.ROLE_ADMIN);
-
-        user.getRoles().add(roleDefinitionService.getDefaultAdminRoleLink());
+        user.getRoles().add(userRoleService.getDefaultAdminRoleLink());
         user = (ICoreUser) coreUserService.save(user);
         return user;
 

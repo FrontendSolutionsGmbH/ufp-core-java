@@ -1,6 +1,5 @@
 package com.froso.ufp.modules.core.roles.model;
 
-import com.froso.ufp.core.domain.documents.*;
 import com.froso.ufp.modules.core.client.model.*;
 import com.froso.ufp.modules.core.resourcemetadata.annotations.*;
 import org.springframework.data.mongodb.core.mapping.*;
@@ -8,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.*;
 /**
  * Created by ckleinhuix on 12.11.2015.
  */
-@Document(collection = RoleCapability.TYPE_NAME)
+@Document(collection = UserRight.TYPE_NAME)
 
 @UFPResourceMetadataAnnotation(
         keywords =
@@ -19,15 +18,15 @@ import org.springframework.data.mongodb.core.mapping.*;
 )
 
 
-public class RoleCapability extends ClientReferenceWithName {
+public class UserRight extends ClientReferenceWithName {
 
     /**
      * The constant TYPE_NAME.
      */
-    public static final String TYPE_NAME = "RoleCapability";
+    public static final String TYPE_NAME = "UserRight";
 
 
-    public RoleCapability() {
+    public UserRight() {
 
         super(TYPE_NAME);
     }

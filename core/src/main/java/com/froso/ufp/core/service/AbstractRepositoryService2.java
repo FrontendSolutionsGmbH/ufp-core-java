@@ -37,11 +37,6 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.*;
 
-/**
- * Created by ckleinhuix on 10.12.13.
- *
- * @param <T> the type parameter
- */
 public class AbstractRepositoryService2<T extends IDataDocument>
         extends EventPublisherImpl implements DataService<T>, RepositoryService<T>, IMetaDataResource {
     public static final String DEFAULT_ID = "default";
@@ -890,7 +885,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
                 query.with(sort);
             }
             if (pageable != null) {
-                // just execute if pageing is valid
+                // just execute if paging is valid
                 query.with(pageable);
                 listresult = mongoOperations.find(query, getClassOfRepository(), getCollectionName());
             }

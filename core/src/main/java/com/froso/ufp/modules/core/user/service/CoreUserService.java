@@ -40,31 +40,6 @@ public class CoreUserService
 
     }
 
-    /**
-     * Gets encrypted coreUser id.
-     *
-     * @param coreUser the coreUser
-     * @return the encrypted coreUser id
-     * @throws Exception the exception
-     */
-    public static String getEncryptedUserId(ICoreUser coreUser) {
-
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(TOKENIDENTIFIER_RETAIL);
-        stringBuffer.append("?");
-        stringBuffer.append(TOKENIDENTIFIER_TIME);
-        stringBuffer.append("=");
-        stringBuffer.append(Encryptor.dateToEncryptionDateString(DateTime.now()));
-        stringBuffer.append("&");
-        stringBuffer.append(TOKENIDENTIFIER_USERID);
-        stringBuffer.append("=");
-        stringBuffer.append(coreUser.getId());
-        stringBuffer.append("&");
-        stringBuffer.append(TOKENIDENTIFIER_ROLE);
-        stringBuffer.append("=");
-        stringBuffer.append(coreUser.getRole());
-        return Encryptor.enrypt(stringBuffer.toString(), getConstantOncePerSession128BitSecretKey());
-    }
 
     /**
      * Gets constant once per session 128 bit secret key.
