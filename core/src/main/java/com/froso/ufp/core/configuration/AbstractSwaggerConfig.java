@@ -3,7 +3,6 @@ package com.froso.ufp.core.configuration;
 import com.froso.ufp.core.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
 import com.froso.ufp.modules.core.templatesv2.service.*;
-import java.util.*;
 import org.joda.time.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.*;
@@ -15,6 +14,8 @@ import springfox.documentation.spi.service.contexts.*;
 import springfox.documentation.spring.web.plugins.*;
 import springfox.documentation.swagger.web.*;
 import springfox.documentation.swagger2.annotations.*;
+
+import java.util.*;
 
 @EnableSwagger2
 /*
@@ -41,12 +42,10 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
         LoginEndpoint loginEndpoint = new LoginEndpoint("http://localhost/api/Session/Sms");
         GrantType grantType = new ImplicitGrant(loginEndpoint, "x-ufp-token");
 
-
         OAuth result = new OAuth(securitySchemaOAuth2, makeList(authorizationScope), makeList(grantType));
 
         return result;
     }
-
 
     protected SecurityContext securityContext() {
         return SecurityContext.builder()
@@ -84,7 +83,6 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
 
         return result;
 
-
     }
 
     protected List<GrantType> makeList(GrantType schema) {
@@ -93,7 +91,6 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
         result.add(schema);
 
         return result;
-
 
     }
 
@@ -104,7 +101,6 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
 
         return result;
 
-
     }
 
     protected List<SecurityReference> makeList(SecurityReference schema) {
@@ -114,9 +110,7 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
 
         return result;
 
-
     }
-
 
     protected List<SecurityContext> makeList(SecurityContext schema) {
         List<SecurityContext> result = new ArrayList<>();
@@ -124,7 +118,6 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
         result.add(schema);
 
         return result;
-
 
     }
 
@@ -159,8 +152,8 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
                         "https://froso.de",
                         new ArrayList<VendorExtension>()
 
-
                 ))
+                .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME))
                 ;
     }
 
@@ -184,7 +177,8 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public Docket swaggerPublicApiCoreDocumentation() {
+    @Autowired
+    public Docket swaggerPublicApiCoreDocumentation(IPropertyService propertyService) {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 // global date output config
@@ -199,6 +193,7 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
                 .build().securitySchemes(makeList(securitySchema()))
                 .securityContexts(makeList(securityContext()))
                 .apiInfo(getSwaggerApiDefinition())
+                .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME))
                 ;
     }
 
@@ -218,6 +213,5 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
-
 
 }
