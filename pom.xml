@@ -113,6 +113,18 @@
     </properties>
     <dependencies>
         <dependency>
+            <!--      https://springfox.github.io/springfox/      -->
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <!--      https://springfox.github.io/springfox/      -->
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
@@ -224,6 +236,7 @@
             <artifactId>velocity</artifactId>
             <version>1.6.2</version>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -256,6 +269,23 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
+=======
+
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-websocket</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.hateoas</groupId>
+                    <artifactId>spring-hateoas</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.springframework.security</groupId>
+                    <artifactId>spring-security-web</artifactId>
+                </dependency>
+
+>>>>>>> 12
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
@@ -276,6 +306,7 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>
@@ -288,6 +319,20 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
         </dependency>
+=======
+                <dependency>
+                    <groupId>org.springframework.integration</groupId>
+                    <artifactId>spring-integration-core</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.integration</groupId>
+                    <artifactId>spring-integration-ftp</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-commons</artifactId>
+                </dependency>
+>>>>>>> 12
         <dependency>
             <!--            for pdf file generation -->
             <groupId>org.apache.pdfbox</groupId>
@@ -300,11 +345,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <!--            ldap handling -->
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core</artifactId>
         </dependency>
+=======
+                <dependency>
+                    <!--            ldap handling -->
+                    <groupId>org.springframework.ldap</groupId>
+                    <artifactId>spring-ldap-core</artifactId>
+                </dependency>
+>>>>>>> 12
         <dependency>
             <!--            faker library used in runtime scope for dummy data generation -->
             <groupId>com.github.javafaker</groupId>
@@ -369,7 +422,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -384,7 +437,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-help-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -399,7 +452,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>3.0.0-M3</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -409,7 +462,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -418,7 +471,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.1</version>
                 <configuration>
                     <failOnWarnings>false</failOnWarnings>
                     <failOnError>false</failOnError>
@@ -438,7 +491,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>3.0.0-M3</version>
                 <configuration>
                     <failIfNoTests>false</failIfNoTests>
                     <reuseForks>true</reuseForks>
@@ -479,7 +532,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>3.1.9</version>
+                <version>3.1.12.2</version>
                 <configuration>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
@@ -493,6 +546,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -506,16 +560,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.12.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
