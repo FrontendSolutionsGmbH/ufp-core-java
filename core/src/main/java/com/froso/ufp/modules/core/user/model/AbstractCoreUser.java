@@ -6,9 +6,9 @@ import com.froso.ufp.modules.core.client.model.*;
 import com.froso.ufp.modules.core.resourcemetadata.annotations.*;
 import com.froso.ufp.modules.core.roles.model.*;
 import io.swagger.annotations.*;
-import java.util.*;
 import org.apache.commons.lang3.builder.*;
-import org.springframework.data.mongodb.core.index.*;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA. Christian Kleinhuis (ck@froso.de) Date: 27.11.13 Time: 10:56 To change this
@@ -39,9 +39,6 @@ public abstract class AbstractCoreUser
     private Boolean active = Boolean.TRUE;
     @ApiModelProperty(hidden = false, example = "false")
     private Boolean blocked = Boolean.FALSE;
-    @TextIndexed
-    @ApiModelProperty(hidden = false, example = "ROLE_ADMIN")
-    private UserRoleEnum role = UserRoleEnum.ROLE_GUEST;
 
     /**
      * Constructor Simple user.
@@ -68,7 +65,6 @@ public abstract class AbstractCoreUser
     public void setRoles(Set<DataDocumentLink<UserRole>> roles) {
         this.roles = roles;
     }
-
 
     /**
      * Gets counters.
@@ -109,7 +105,6 @@ public abstract class AbstractCoreUser
 
         this.blocked = blocked;
     }
-
 
     /**
      * Gets active.
