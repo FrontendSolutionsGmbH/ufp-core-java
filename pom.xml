@@ -236,7 +236,6 @@
             <artifactId>velocity</artifactId>
             <version>1.6.2</version>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -269,23 +268,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
-=======
-
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-websocket</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.hateoas</groupId>
-                    <artifactId>spring-hateoas</artifactId>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.springframework.security</groupId>
-                    <artifactId>spring-security-web</artifactId>
-                </dependency>
-
->>>>>>> 12
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
@@ -306,7 +288,6 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>
@@ -319,20 +300,6 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
         </dependency>
-=======
-                <dependency>
-                    <groupId>org.springframework.integration</groupId>
-                    <artifactId>spring-integration-core</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.integration</groupId>
-                    <artifactId>spring-integration-ftp</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.data</groupId>
-                    <artifactId>spring-data-commons</artifactId>
-                </dependency>
->>>>>>> 12
         <dependency>
             <!--            for pdf file generation -->
             <groupId>org.apache.pdfbox</groupId>
@@ -345,19 +312,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <!--            ldap handling -->
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core</artifactId>
         </dependency>
-=======
-                <dependency>
-                    <!--            ldap handling -->
-                    <groupId>org.springframework.ldap</groupId>
-                    <artifactId>spring-ldap-core</artifactId>
-                </dependency>
->>>>>>> 12
         <dependency>
             <!--            faker library used in runtime scope for dummy data generation -->
             <groupId>com.github.javafaker</groupId>

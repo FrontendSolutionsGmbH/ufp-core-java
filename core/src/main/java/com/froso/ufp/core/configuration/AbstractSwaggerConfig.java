@@ -153,8 +153,14 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
                         new ArrayList<VendorExtension>()
 
                 ))
-                .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME))
-                ;
+                .protocols(new HashSet<String>() {
+                                 {
+                                     add("https");
+                                     add("http");
+                                 }
+                             }
+                )
+                .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME));
     }
 
     @Bean
@@ -193,6 +199,13 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
                 .build().securitySchemes(makeList(securitySchema()))
                 .securityContexts(makeList(securityContext()))
                 .apiInfo(getSwaggerApiDefinition())
+                .protocols(new HashSet<String>() {
+                               {
+                                   add("https");
+                                   add("http");
+                               }
+                           }
+                )
                 .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME))
                 ;
     }
