@@ -1,6 +1,5 @@
 package com.froso.ufp.modules.core.user.service;
 
-import com.froso.ufp.core.configuration.*;
 import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
 import com.froso.ufp.modules.core.roles.service.*;
@@ -24,10 +23,10 @@ import org.springframework.stereotype.*;
  */
 @Service
 public class CoreUserHelperService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoreUserHelperService.class);
     public static final String TOKENIDENTIFIER_TIME = "t";
     public static final String TOKENIDENTIFIER_USERID = "u";
     public static final int ONCE_PER_SESSION_RANDOM_STRING_LENGTH = 16;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreUserHelperService.class);
     private static final String TOKENIDENTIFIER_RETAIL = "r";
     private static final String TOKENIDENTIFIER_ROLE = "ro";
     //get log4j handler
@@ -39,11 +38,11 @@ public class CoreUserHelperService {
     private final ICoreUserService<ICoreUser> coreUserService;
 
     @Autowired
-    public CoreUserHelperService(IPropertyService propertyService, ISessionService sessionService, ICoreUserService<ICoreUser> coreUserService,UserRoleService roleService) {
+    public CoreUserHelperService(IPropertyService propertyService, ISessionService sessionService, ICoreUserService<ICoreUser> coreUserService, UserRoleService roleService) {
         this.propertyService = propertyService;
         this.sessionService = sessionService;
         this.coreUserService = coreUserService;
-        this.userRoleService=roleService;
+        this.userRoleService = roleService;
     }
 
     /**
@@ -165,7 +164,8 @@ public class CoreUserHelperService {
         session.setToken(coreUser.getId());
         session.setRemoteHost(RequestRemoteHostRetriever.getRemoteHostOfCurrentRequest());
         session.setActive(true);
-        sessionService.save(session);
+        LOGGER.info("session creating  " + session.getId());
+        session = sessionService.save(session);
         LOGGER.info("session created  " + session.getId());
 
     }

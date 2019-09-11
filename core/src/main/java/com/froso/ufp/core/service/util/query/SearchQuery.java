@@ -1,13 +1,14 @@
 package com.froso.ufp.core.service.util.query;
 
 import com.froso.ufp.core.domain.documents.simple.plain.*;
-import java.nio.charset.*;
-import java.util.*;
 import org.apache.commons.lang3.*;
 import org.joda.time.*;
 import org.slf4j.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.*;
+
+import java.nio.charset.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA. Entiteit: ck Date: 20.03.14 Time: 12:06 To change this template use File | Settings | File
@@ -89,6 +90,11 @@ public class SearchQuery {
                 sort = sort.and(sortInner);
             }
         }
+        if (sort == null) {
+
+            sort = new Sort(Sort.Direction.ASC, "metaData.creationTimestamp");
+
+        }
         return sort;
     }
 
@@ -142,7 +148,6 @@ public class SearchQuery {
         searchkeyvalues.remove(FILTER_TEXT_KEY);
         List<CriteriaDefinition> criterias = buildCriteriasFromMap(searchkeyvalues, searchEqualsFields);
 
-
         Criteria criteria = new Criteria();
         Criteria[] array = new Criteria[criterias.size()];
         Criteria finalcriteria;
@@ -166,7 +171,6 @@ public class SearchQuery {
             }
         }
 
-
         return finalcriteria;
     }
 
@@ -188,7 +192,6 @@ public class SearchQuery {
                     .matching(searchkeyvalues.get(FILTER_TEXT_KEY));
 
             //     criterias.add(criteria);
-
 
         }
 
@@ -214,7 +217,6 @@ public class SearchQuery {
         }
         return result;
     }
-
 
     private static String makeUTF8String(String string) {
 
@@ -250,7 +252,6 @@ public class SearchQuery {
             } else if (keyvalue.getKey().equals("id")) {
                 keyvalue.setKey("_id");
             }
-
 
             if (keyvalue.getKey().equals(SEARCH_METHOD_FIELD_NAME)) {
                 // just ignore searchmethod,. which is used to glue all props together :/
@@ -309,7 +310,6 @@ public class SearchQuery {
                     // make a regexp search on this field
 
                     String search = cleanSearchFromRegexp(keyvalue.getValue());
-
 
                     Criteria nextCriteria = Criteria.where(keyvalue.getKey()).regex(search, "i");
                     // change, warning, using where is horribly slow, but allows regexp on non string fields ....

@@ -12,6 +12,7 @@ import com.froso.ufp.modules.core.user.service.*;
 import com.froso.ufp.modules.optional.authenticate.emailpassword.model.*;
 import com.froso.ufp.modules.optional.authenticate.emailpassword.service.*;
 import io.swagger.annotations.*;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.*;
@@ -25,8 +26,8 @@ import javax.servlet.http.*;
         tags = UFPRegisterConstants.TAG)
 @UFPPublicController
 public class EmailPasswordAdminUserCreateController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailPasswordAdminUserCreateController.class);
     private static String PROPERTY_NAME_ADMIN_EMAIL = "sendmail.adminemail";
-
     private final ICoreUserService coreUserService;
     private final IPropertyService propertyService;
     private final UserRoleService userRoleService;
@@ -99,7 +100,11 @@ public class EmailPasswordAdminUserCreateController {
         user.setFirstName("UFP");
         user.setLastName("ADMIN");
         user.getRoles().add(userRoleService.getDefaultAdminRoleLink());
+        LOGGER.info("Creating Admin Core User", user);
+        LOGGER.info("Creating Admin Core User", user.getId());
         user = (ICoreUser) coreUserService.save(user);
+        LOGGER.info("Creating Admin Core User (debug aftersave)", user);
+        LOGGER.info("Creating Admin Core User (debug aftersave)", user.getId());
         return user;
 
     }

@@ -335,6 +335,12 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
         return manager.getResponseEntity();
     }
 
+    protected T enrichDefault(T data) {
+
+        return data;
+
+    }
+
     /**
      * get a single element from the repository
      *
@@ -363,6 +369,7 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
         if (DEFAULT_NEW.equals(elementId)) {
 
             T newDefault = service.createNewDefault();
+            newDefault = enrichDefault(newDefault);
             newDefault.getMetaData().setCreatorUserLink(new DataDocumentLink<ICoreUser>(userId));
             manager.addResult(newDefault);
         } else {

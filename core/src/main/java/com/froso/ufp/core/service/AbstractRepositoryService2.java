@@ -1185,30 +1185,6 @@ public class AbstractRepositoryService2<T extends IDataDocument>
     }
 
     /**
-     * Perform distinct object.
-     *
-     * @param distinctJSON      the distinct json
-     * @param searchkeyvaluesIn the searchkeyvalues in
-     * @return the object
-     */
-    public Object performDistinct(String distinctJSON, Map<String, String> searchkeyvaluesIn) {
-
-        Map<String, String> searchkeyvalues = cleanInputRequestParams(searchkeyvaluesIn);
-        Object result = null;
-        try {
-            transformAnyTextSearchInputRequest(searchkeyvalues);
-            Query query = SearchQuery.buildSearchQuery(searchkeyvalues, searchEqualsFields);
-            // Count Possible Results
-
-            result = mongoOperations.count(query, getClassOfRepository(), getCollectionName());
-        } catch (Exception e) {
-            // Search Problem
-            LOGGER.error("Search GetCount Problem in BaseRepository Service " + typeName + " " + e.getMessage(), e);
-        }
-        return result;
-    }
-
-    /**
      * Search get count.
      *
      * @param searchkeyvaluesIn the searchkeyvalues in

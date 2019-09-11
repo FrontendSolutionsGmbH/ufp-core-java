@@ -155,18 +155,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
         </dependency>
-        <dependency>
-            <!--      https://springfox.github.io/springfox/      -->
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
-        </dependency>
-        <dependency>
-            <!--      https://springfox.github.io/springfox/      -->
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
-        </dependency>
+
         <dependency>
             <!--            for image resamplingused by filePicture-->
             <groupId>org.imgscalr</groupId>
@@ -365,6 +354,11 @@
             <name>project</name>
             <url>file:${basedir}/../repo</url>
         </repository>
+            <repository>
+                <id>jcenter-snapshots</id>
+                <name>jcenter</name>
+                <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+            </repository>
     </repositories>
     <build>
         <plugins>

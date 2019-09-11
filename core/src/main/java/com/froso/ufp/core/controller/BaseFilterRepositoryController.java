@@ -82,6 +82,12 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
         return result;
     }
 
+    protected T enrichDefault(T data, String userId) {
+
+        return data;
+
+    }
+
     public abstract Map<String, String> filter(String userId);
 
     @Autowired(required = false)
@@ -231,6 +237,7 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
         if (DEFAULT_NEW.equals(elementId)) {
 
             T newDefault = service.createNewDefault();
+            newDefault = enrichDefault(newDefault, userId);
             newDefault.getMetaData().setCreatorUserLink(new DataDocumentLink<ICoreUser>(userId));
             fillDefaultObject(newDefault);
             manager.addResult(newDefault);

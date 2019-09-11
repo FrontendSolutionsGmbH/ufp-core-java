@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.*;
 
 import java.util.*;
 
-@EnableSwagger2
+//@EnableSwagger2
 /*
 
 this class acts as a base class for swagger initialisation, it is not marked as @Configuration, it should be used by subclassing and providing values for the
@@ -153,13 +153,7 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
                         new ArrayList<VendorExtension>()
 
                 ))
-                .protocols(new HashSet<String>() {
-                                 {
-                                     add("https");
-                                     add("http");
-                                 }
-                             }
-                )
+
                 .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME));
     }
 
@@ -199,13 +193,6 @@ public abstract class AbstractSwaggerConfig extends WebMvcConfigurerAdapter {
                 .build().securitySchemes(makeList(securitySchema()))
                 .securityContexts(makeList(securityContext()))
                 .apiInfo(getSwaggerApiDefinition())
-                .protocols(new HashSet<String>() {
-                               {
-                                   add("https");
-                                   add("http");
-                               }
-                           }
-                )
                 .host(propertyService.getPropertyValue(UFPConstants.PROPERTY_APPLICATION_HOSTNAME))
                 ;
     }

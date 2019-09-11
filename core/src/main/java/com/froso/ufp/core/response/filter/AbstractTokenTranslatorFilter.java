@@ -280,7 +280,7 @@ public abstract class AbstractTokenTranslatorFilter
             // same time!
             return;
         } catch (UserTokenException.InvalidRole ignored) {
-            LOGGER.debug(ignored.getMessage(), ignored);
+            LOGGER.error(ignored.getMessage(), ignored);
 
 /*
             throw new UFPRuntimeException(ResultStatusEnumCode.ERROR_TOKEN_INVALID_ROLE, ignored);
@@ -301,7 +301,7 @@ public abstract class AbstractTokenTranslatorFilter
             /*
             throw new UFPRuntimeException(ResultStatusEnumCode.ERROR_TOKEN_INVALID, ignored);
         */
-            LOGGER.debug(ignored.getMessage(), ignored);
+            LOGGER.error(ignored.getMessage(), ignored);
             // Build response here!
             ResponseHandler handler = new ResponseHandler();
             handler.setStatus(ResultStatusEnumCode.ERROR_TOKEN_INVALID);
@@ -313,7 +313,7 @@ public abstract class AbstractTokenTranslatorFilter
             return;
 
         } catch (Exception ignored) {
-            LOGGER.debug(ignored.getMessage(), ignored);
+            LOGGER.error(ignored.getMessage(), ignored);
 
             //  throw new UFPRuntimeException(ResultStatusEnumCode.ERROR_TOKEN_INVALID, ignored);
             // Build response here!
