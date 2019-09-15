@@ -464,6 +464,7 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
             dataInParsed.getMetaData().getCreatorUserLink().setId(userId);
             fillDefaultObject(dataInParsed);
             dataInParsed.getMetaData().getCreatorUserLink().setId(userId);
+            prepareSave(dataInParsed);
             dataInParsed = service.save(dataInParsed);
             manager.addResult(dataInParsed);
         } else {
@@ -472,6 +473,7 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
             // Save Updated object
             // Enrich parsed object with non-automatically parsed data that belongs to object as well
             dataInParsed.getMetaData().getLastEditorUserLink().setId(userId);
+            prepareSave(dataInParsed);
             item = service.save(dataInParsed);
             manager.addResult(item);
 
@@ -594,6 +596,10 @@ public abstract class BaseRepositoryController<T extends IDataDocument> {
      */
     protected void fillDefaultObject(T object) {
         // template method to create a new object of type T
+    }
+
+    protected void prepareSave(T object) {
+        // template method to update of type T
     }
 
 //

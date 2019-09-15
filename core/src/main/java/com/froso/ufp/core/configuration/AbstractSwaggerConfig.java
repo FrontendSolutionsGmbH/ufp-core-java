@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.*;
 
 import java.util.*;
 
-//@EnableSwagger2
+@EnableSwagger2
 /*
 
 this class acts as a base class for swagger initialisation, it is not marked as @Configuration, it should be used by subclassing and providing values for the

@@ -20,5 +20,34 @@ import org.springframework.web.bind.annotation.*;
 @UFPAdminController
 class EmailPasswordAuthenticateAdminCRUDController extends BaseRepositoryController<AuthenticateEmailPassword> {
 
+    @Autowired
+    private EmailPasswordAuthenticateService authenticateService;
 
+    /**
+     * handle password encoding in controller
+     *
+     * @param object
+     */
+    @Override
+    protected void prepareSave(AuthenticateEmailPassword object) {
+
+        if (null != object) {
+            AuthenticateEmailPassword current = service.findOne(object.getId());
+            // template method to update of type T
+            if (null == object.getData()) {
+// restore current
+                object.setData(current.getData());
+            }
+            if (null == object.getData().getPassword()) {
+// restore current
+                object.getData().setPassword(current.getData().getPassword());
+                ;
+
+            } else {
+                // encode incoming password
+                object.getData().setPassword(authenticateService.encodePassword(object.getData().getPassword()));
+
+            }
+        }
+    }
 }

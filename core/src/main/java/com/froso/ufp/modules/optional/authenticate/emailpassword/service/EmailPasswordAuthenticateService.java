@@ -4,22 +4,27 @@ import com.froso.ufp.modules.core.authenticate.model.*;
 import com.froso.ufp.modules.core.authenticate.service.*;
 import com.froso.ufp.modules.optional.authenticate.emailpassword.controller.*;
 import com.froso.ufp.modules.optional.authenticate.emailpassword.model.*;
-import java.util.*;
 import org.joda.time.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.*;
 
-@Service
+import java.util.*;
+
 public class EmailPasswordAuthenticateService extends AbstractAuthenticateService {
 
     @Autowired
     private EmailPasswordRegisterService emailPasswordRegisterService;
     @Autowired
     private EmailPasswordAuthenticateCRUDService usernamePasswordAuthenticateCRUDService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public String encodePassword(String pw) {
+
+        return passwordEncoder.encode(pw);
+
+    }
 
     public AuthenticateEmailPassword setNewPasswordViaNonce(String nonceValue, EmailPasswordAuthenticateRequestDataPasswordOnly data) {
 
@@ -27,7 +32,7 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
 // set new password in model, remove nonce and savew
         model.getData().setNonceData(null);
 
-        model.getData().setPassword(passwordEncoder.encode(data.getPassword()));
+        model.getData().setPassword(encodePassword(data.getPassword()));
 
         return usernamePasswordAuthenticateCRUDService.save(model);
 
@@ -52,9 +57,7 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
 
     public List<Authentication> getAuthenticationsForUser(String coreUserId) {
 
-
         return usernamePasswordAuthenticateCRUDService.getAllEntriesForCoreUserId(coreUserId);
-
 
     }
                            /*
@@ -92,7 +95,6 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
 
     }
 
-
     public void createNewNonceForEmail(EmailPasswordAuthenticateRequestResponse data) {
         AuthenticateEmailPassword emailPasswordAuthenticateModel = usernamePasswordAuthenticateCRUDService.findOneByKeyValue("data.email", "=" + data.getEmail());
         if (emailPasswordAuthenticateModel == null) {
@@ -103,7 +105,6 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
         } else {
             // authentication existant, check if incoming nonce existant,
             // check nonce
-
 
             emailPasswordRegisterService.sendPasswordReset(emailPasswordAuthenticateModel, data);
 
@@ -121,7 +122,6 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
 
                 throw new EmailPasswordAuthenticateException.AuthorizationNotFound();
 
-
             } else {
                 // authentication existant, check if incoming nonce existant,
                 // check nonce
@@ -131,7 +131,6 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
                     result = handleFirstTimeNumberRegistered(emailPasswordAuthenticateModel, data);
 
                 }
-
 
             }
         } else {
@@ -146,6 +145,5 @@ public class EmailPasswordAuthenticateService extends AbstractAuthenticateServic
     protected String getAuthenticationName() {
         return EmailPasswordConstants.NAME;
     }
-
 
 }
