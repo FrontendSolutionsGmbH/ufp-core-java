@@ -22,6 +22,7 @@ public abstract class EmailPasswordAuthenticateDataBase implements IDataObject {
     private String email;
     @ApiModelProperty(required = true, example = "****", position = 1, notes = "A password", dataType = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull
     private String password;
 
     /**
