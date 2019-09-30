@@ -1,14 +1,15 @@
 package com.froso.ufp.modules.optional.authenticate.emailpassword.service;
 
+import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
 import com.froso.ufp.modules.core.authenticate.service.*;
 import com.froso.ufp.modules.core.templatesv2.model.*;
 import com.froso.ufp.modules.core.templatesv2.service.*;
 import com.froso.ufp.modules.optional.authenticate.emailpassword.model.*;
-import java.util.*;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA. Christian Kleinhuis (ck@froso.de) Date: 28.11.13 Time: 11:46 Services act as
@@ -39,6 +40,14 @@ public class EmailPasswordAuthenticateCRUDService extends AbstractCoreAuthentica
         // call any present super method
         super.prepareSave(object);
 
+        if (null == object.getData().getPassword()) {
+            // create random password
+            /** this password will not be useable but its important to not null the pw value
+             on purpose it is not exposed and not default password filled, to trigger a reset password workflow
+             but it is desired to not send password through the wire
+             */
+            object.getData().setPassword(RandGen.getRandomUUID());
+        }
         // encode the received password using the password encoder
         // object.getData().setPassword(passwordEncoder.encode(object.getData().getPassword()));
 
@@ -52,7 +61,6 @@ public class EmailPasswordAuthenticateCRUDService extends AbstractCoreAuthentica
      * @return the string
      */
     String parseUsernamePasswordTemplate(AuthenticateEmailPassword model, String template) {
-
 
         TemplateSettings settings = new TemplateSettings();
         settings.setTemplatePath("UsernamePassword-auth");

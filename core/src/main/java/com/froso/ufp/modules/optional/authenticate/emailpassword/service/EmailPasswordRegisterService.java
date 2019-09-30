@@ -61,8 +61,8 @@ public class EmailPasswordRegisterService extends AbstractRegisterService {
     }
 
     public void sendPasswordReset(AuthenticateEmailPassword model, EmailPasswordAuthenticateRequestResponse data) {
-        if (model.getData().getPassword() == null) {
 
+        if (!model.isVerified() ) {
             // send welcome mail if no password present yet ...
             sendLowLevelEmailAndCreateNewNonceBeforeIfNonceTimedOutOrIsNotPresent(model, data, EMAILPASSWORD_RESET_EMAIL_WELCOME_TEMPLATE_SUBJECT, EMAILPASSWORD_RESET_EMAIL_WELCOME_TEMPLATE);
 

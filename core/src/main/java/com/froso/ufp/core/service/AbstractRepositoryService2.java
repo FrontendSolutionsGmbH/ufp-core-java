@@ -337,12 +337,13 @@ public class AbstractRepositoryService2<T extends IDataDocument>
             document.getMetaData().setLastChangedTimestamp(DateTime.now());
         }
 
+        // allow adjustment of model data by concrete service BEFORE validation
+        prepareSave(element);
+
         // call validation before each save!
         if (validate) {
             validateObject(element);
         }
-
-        prepareSave(element);
 
         boolean isExistant = isExistant(element.getId());
         String currentUserId = sessionService.getUserIdForToken(RequestTokenRetriever.getCurrentUserToken());
