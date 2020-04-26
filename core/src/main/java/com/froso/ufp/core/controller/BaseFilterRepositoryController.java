@@ -10,7 +10,6 @@ import com.froso.ufp.core.response.*;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.core.service.operations.*;
 import com.froso.ufp.modules.core.session.service.*;
-import com.froso.ufp.modules.core.user.model.*;
 import io.swagger.annotations.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -25,7 +24,7 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
     public static final String CRUD_ADMIN_REPOSITORY = "CRUD Admin Repository";
     public static final String ENDPOINT = UFPConstants.ADMIN_FULL + "/{token}";
     public static final String GROUP_ID = "groupingKeyFunction";
-    public static final String DEFAULT_NEW = "newDefault";
+    private static final String DEFAULT_NEW = "newDefault";
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseFilterRepositoryController.class);
     @Autowired
     protected RepositoryService<T> service;
@@ -58,7 +57,7 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
      * @param request the request
      * @return the single parameter value map from request
      */
-    public static final Map<String, String> getSingleParameterValueMapFromRequest(HttpServletRequest request) {
+    private static Map<String, String> getSingleParameterValueMapFromRequest(HttpServletRequest request) {
         Map<String, String[]> allRequestParams = request.getParameterMap();
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<String, String[]> entry : allRequestParams.entrySet()) {
@@ -82,6 +81,17 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
         return result;
     }
 
+    private static Map<String, String> mergeMapButKeepFilter(Map<String, String> map1, Map<String, String> map2) {
+        Map<String, String> result = new HashMap<>();
+        for (Map.Entry<String, String> entry : map1.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<String, String> entry : map2.entrySet()) {
+            result.putIfAbsent(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
     protected T enrichDefault(T data, String userId) {
 
         return data;
@@ -93,15 +103,6 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
     @Autowired(required = false)
     public void setDependencySessionService(SessionService sessionService) {
         this.sessionService = sessionService;
-    }
-
-    /**
-     * Gets type name.
-     *
-     * @return the type name
-     */
-    public String getTypeName() {
-        return service.getTypeName();
     }
 //
 //    /**
@@ -125,6 +126,15 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
 //        manager.addResult(searchresult);
 //        return manager.getResponseEntity();
 //    }
+
+    /**
+     * Gets type name.
+     *
+     * @return the type name
+     */
+    public String getTypeName() {
+        return service.getTypeName();
+    }
 
     /**
      * Perform group 2 response entity.
@@ -201,10 +211,11 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
                     String userId, HttpServletRequest request) {
         Map<String, String> allRequestParams = getSingleParameterValueMapFromRequest(request);
 
-        allRequestParams.putAll(filter(userId));
+        Map<String, String> merged = mergeMapButKeepFilter(allRequestParams, filter(userId));
+//        allRequestParams.putAll(filter(userId));
 
         ResponseHandlerTemplate manager = new ResponseHandlerTemplate<>(request);
-        IDataObjectList<T> searchresult = service.searchPaged(allRequestParams);
+        IDataObjectList<T> searchresult = service.searchPaged(merged);
         manager.addResult(searchresult);
         return manager.getResponseEntity();
     }
@@ -238,7 +249,7 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
 
             T newDefault = service.createNewDefault();
             newDefault = enrichDefault(newDefault, userId);
-            newDefault.getMetaData().setCreatorUserLink(new DataDocumentLink<ICoreUser>(userId));
+            newDefault.getMetaData().setCreatorUserLink(new DataDocumentLink<>(userId));
             fillDefaultObject(newDefault);
             manager.addResult(newDefault);
         } else {
@@ -260,7 +271,7 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
      * @param token the token
      * @return the user id from token
      */
-    protected String getUserIDFromToken(String token) {
+    private String getUserIDFromToken(String token) {
         String result = token;
         if (null != sessionService) {
             result = sessionService.getUserIdForToken(token);

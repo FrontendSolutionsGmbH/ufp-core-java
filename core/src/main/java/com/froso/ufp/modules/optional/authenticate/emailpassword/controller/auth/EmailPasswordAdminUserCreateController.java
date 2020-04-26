@@ -27,7 +27,7 @@ import javax.servlet.http.*;
 @UFPPublicController
 public class EmailPasswordAdminUserCreateController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailPasswordAdminUserCreateController.class);
-    private static String PROPERTY_NAME_ADMIN_EMAIL = "sendmail.adminemail";
+    private static final String PROPERTY_NAME_ADMIN_EMAIL = "sendmail.adminemail";
     private final ICoreUserService coreUserService;
     private final IPropertyService propertyService;
     private final UserRoleService userRoleService;
@@ -55,27 +55,27 @@ public class EmailPasswordAdminUserCreateController {
 
         /* check if email already present as emailpw login */
 
-        AuthenticateEmailPassword model = emailPasswordAuthenticateCRUDService.findOneByKeyValue("data.email", propertyService.getPropertyValue(PROPERTY_NAME_ADMIN_EMAIL));
-        if (model == null) {
+        AuthenticateEmailPassword authenticateEmailPassword = emailPasswordAuthenticateCRUDService.findOneByKeyValue("data.email", propertyService.getPropertyValue(PROPERTY_NAME_ADMIN_EMAIL));
+        if (authenticateEmailPassword == null) {
 
 
             /* create new user */
             ICoreUser user = createCoreUser();
 
-            model = emailPasswordAuthenticateCRUDService.createNewDefault();
-            model.getData().setEmail(propertyService.getPropertyValue(PROPERTY_NAME_ADMIN_EMAIL));
-            model.setCoreUser(new DataDocumentLink<>(user.getId()));
-            emailPasswordAuthenticateCRUDService.save(model);
+            authenticateEmailPassword = emailPasswordAuthenticateCRUDService.createNewDefault();
+            authenticateEmailPassword.getData().setEmail(propertyService.getPropertyValue(PROPERTY_NAME_ADMIN_EMAIL));
+            authenticateEmailPassword.setCoreUser(new DataDocumentLink<>(user.getId()));
+            emailPasswordAuthenticateCRUDService.save(authenticateEmailPassword);
 
         } else {
             // login already present, do resend pw forgot email
             // BUT: if login already present, make sure the user exists
-            ICoreUser user = (ICoreUser) coreUserService.findOneBrute(model.getCoreUser().getId());
+            ICoreUser user = (ICoreUser) coreUserService.findOneBrute(authenticateEmailPassword.getCoreUser().getId());
             if (user == null) {
 
                 user = createCoreUser();
-                model.getCoreUser().setId(user.getId());
-                emailPasswordAuthenticateCRUDService.save(model);
+                authenticateEmailPassword.getCoreUser().setId(user.getId());
+                emailPasswordAuthenticateCRUDService.save(authenticateEmailPassword);
 
             } else {
 //                user.setRole(UserRoleEnum.ROLE_ADMIN);
@@ -87,7 +87,7 @@ public class EmailPasswordAdminUserCreateController {
         }
 
         EmailPasswordAuthenticateRequestResponse loginData = new EmailPasswordAuthenticateRequestResponse();
-        loginData.setEmail(model.getData().getEmail());
+        loginData.setEmail(authenticateEmailPassword.getData().getEmail());
         loginData.setRequestResponse(data.getRequestResponse());
         emailPasswordAuthenticateService.createNewNonceForEmail(loginData);
 
