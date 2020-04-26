@@ -3,10 +3,11 @@ package com.froso.ufp.modules.core.templatesv1.service;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.templatesv1.model.*;
-import java.util.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * Created by alex on 05.05.14.
@@ -27,6 +28,17 @@ public class SimpleTemplateService extends AbstractRepositoryService2<TemplateV1
         super(TemplateV1.TYPE_NAME);
     }
 
+    private static TemplateV1 findByRessourcePath(String path) {
+        TemplateV1 result = new TemplateV1();
+        try {
+            String contents = FileUtil.getFile(path);
+            result.setContent(contents);
+        } catch (Exception e) {
+            LOGGER.error("findByRessourcePath ", e);
+        }
+        return result;
+    }
+
     /**
      * Find by parent id.
      *
@@ -34,7 +46,6 @@ public class SimpleTemplateService extends AbstractRepositoryService2<TemplateV1
      * @return the list
      */
     public List<TemplateV1> findByParentId(String id) {
-
 
         return findByKeyValue("parentId", id);
     }
@@ -106,20 +117,7 @@ public class SimpleTemplateService extends AbstractRepositoryService2<TemplateV1
 
         return result;
 
-
     }
-
-    private TemplateV1 findByRessourcePath(String path) {
-        TemplateV1 result = new TemplateV1();
-        try {
-            String contents = FileUtil.getFile(path);
-            result.setContent(contents);
-        } catch (Exception e) {
-            LOGGER.error("findByRessourcePath ", e);
-        }
-        return result;
-    }
-
 
     /**
      * Find by path and corporate id.
@@ -128,7 +126,7 @@ public class SimpleTemplateService extends AbstractRepositoryService2<TemplateV1
      * @param corporateId the corporate id
      * @return the simple template
      */
-    public TemplateV1 findByPathAndCorporateId(String path, String corporateId) {
+    TemplateV1 findByPathAndCorporateId(String path, String corporateId) {
 
         Map<String, String> searchMap = new HashMap<>();
         searchMap.put("path", path);

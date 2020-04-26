@@ -35,6 +35,7 @@ public class ResourcesService extends AbstractResourcesService<AbstractRepositor
 
     /**
      * old utility mode for grouping counts ...
+     *
      * @return
      */
     @Deprecated
@@ -54,8 +55,23 @@ public class ResourcesService extends AbstractResourcesService<AbstractRepositor
 
     }
 
+    private static boolean nameIsInResource(ResourceMetadata metadata, String name) {
+
+        if (metadata.getResourceName().equals(name)) {
+            return true;
+        }
+        for (String interfaceName : metadata.getInterfaces()) {
+            if (name.equals(interfaceName)) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     /**
      * utility method to resolve a link to a concrete dataobject, dont use :)
+     *
      * @param link
      * @return
      */
@@ -74,10 +90,11 @@ public class ResourcesService extends AbstractResourcesService<AbstractRepositor
 
     /**
      * retrieves the resource service by name returning basically the repository
+     *
      * @param name
      * @return
      */
-    public AbstractRepositoryService2 getResourceServiceByResourceName(String name) {
+    private AbstractRepositoryService2 getResourceServiceByResourceName(String name) {
 
         AbstractRepositoryService2 result = null;
         for (Map.Entry<String, AbstractRepositoryService2> entry : resources.entrySet()) {
@@ -92,6 +109,7 @@ public class ResourcesService extends AbstractResourcesService<AbstractRepositor
 
     /**
      * resolve a service by7 the resource class name
+     *
      * @param clazz
      * @return
      */
@@ -119,21 +137,7 @@ public class ResourcesService extends AbstractResourcesService<AbstractRepositor
         return "crud";
     }
 
-    private boolean nameIsInResource(ResourceMetadata metadata, String name) {
-
-        if (metadata.getResourceName().equals(name)) {
-            return true;
-        }
-        for (String interfaceName : metadata.getInterfaces()) {
-            if (name.equals(interfaceName)) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    public String getResourceNameForInterface(String interfaceName) {
+    String getResourceNameForInterface(String interfaceName) {
         Map<String, ResourceMetadata> resources = getRessourceNames();
 
         for (Map.Entry<String, ResourceMetadata> entryInner : resources.entrySet()) {

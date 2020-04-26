@@ -84,10 +84,10 @@ public abstract class BaseFilterRepositoryController<T extends IDataDocument> {
     private static Map<String, String> mergeMapButKeepFilter(Map<String, String> map1, Map<String, String> map2) {
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<String, String> entry : map1.entrySet()) {
-            result.put(entry.getKey(), entry.getValue());
+            result.put(entry.getKey(), entry.getValue().replace(" ", ""));
         }
         for (Map.Entry<String, String> entry : map2.entrySet()) {
-            result.putIfAbsent(entry.getKey(), entry.getValue());
+            result.putIfAbsent(entry.getKey(), entry.getValue().replace(" ", ""));
         }
         return result;
     }

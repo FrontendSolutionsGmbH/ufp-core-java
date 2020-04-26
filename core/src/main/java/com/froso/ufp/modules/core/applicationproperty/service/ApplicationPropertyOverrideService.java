@@ -2,8 +2,9 @@ package com.froso.ufp.modules.core.applicationproperty.service;
 
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.core.applicationproperty.model.*;
-import java.util.*;
 import org.joda.time.*;
+
+import java.util.*;
 
 /**
  * Created by alex on 20.11.14.
@@ -15,7 +16,6 @@ import org.joda.time.*;
  */
 public class ApplicationPropertyOverrideService extends AbstractRepositoryService2<ApplicationPropertyOverride> {
 
-
     /**
      * Constructor Simple application property service.
      */
@@ -24,7 +24,7 @@ public class ApplicationPropertyOverrideService extends AbstractRepositoryServic
         super(ApplicationPropertyOverride.TYPE_NAME);
     }
 
-    public ApplicationProperty getOverridenProperty(String key) {
+    ApplicationProperty getOverridenProperty(String key) {
 
         LocalTime now = LocalTime.now();
         List<ApplicationPropertyOverride> overrideEntries = findByKeyValue("key", "=" + key);
@@ -39,6 +39,5 @@ public class ApplicationPropertyOverrideService extends AbstractRepositoryServic
         }
         return null;
     }
-
 
 }

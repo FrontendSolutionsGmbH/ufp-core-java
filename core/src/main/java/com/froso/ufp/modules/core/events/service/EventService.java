@@ -12,5 +12,4 @@ import org.springframework.stereotype.*;
 @Service
 public class EventService extends AbstractRepositoryService2<Event> {
 
-
 }

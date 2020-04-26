@@ -7,7 +7,6 @@ import org.springframework.stereotype.*;
 @Service
 public class DataTestService extends AbstractRepositoryService2<DataTestModel> {
 
-
     /**
      * Constructor Simple product service.
      */

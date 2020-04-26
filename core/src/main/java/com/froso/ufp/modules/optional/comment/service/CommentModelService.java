@@ -9,7 +9,6 @@ import com.froso.ufp.modules.optional.comment.model.*;
  * instances
  */
 
-public class CommentModelService<T extends CommentModel> extends AbstractRepositoryService2<T> {
-
+class CommentModelService<T extends CommentModel> extends AbstractRepositoryService2<T> {
 
 }

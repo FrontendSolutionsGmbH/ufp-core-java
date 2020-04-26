@@ -18,6 +18,7 @@ public class UserResourceFilterService extends AbstractRepositoryService2<UserRe
      *
      * @param object the object
      */
+    @Override
     protected void prepareSave(UserResourceFilterModel object) {
 
         Map<String, Object> newMap = new HashMap<>();
@@ -35,6 +36,7 @@ public class UserResourceFilterService extends AbstractRepositoryService2<UserRe
 
     }
 
+    @Override
     protected void prepareResultElement(UserResourceFilterModel object) {
         // wee need too paarse iiiin thee dollaaar siigns
 

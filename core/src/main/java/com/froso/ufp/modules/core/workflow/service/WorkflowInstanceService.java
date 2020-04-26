@@ -3,9 +3,10 @@ package com.froso.ufp.modules.core.workflow.service;
 import com.froso.ufp.core.domain.documents.simple.plain.*;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.core.workflow.model.workflow.domain.*;
-import java.util.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * The type Workflow instance service.
@@ -14,7 +15,6 @@ import org.springframework.stereotype.*;
  */
 @Service
 public class WorkflowInstanceService extends AbstractRepositoryService2<WorkflowInstance> {
-
 
     /**
      * Constructor
@@ -46,11 +46,10 @@ public class WorkflowInstanceService extends AbstractRepositoryService2<Workflow
      * @param pageable the pageable
      * @return the list
      */
-    public List<WorkflowInstance> findErrornousWorkflows(Pageable pageable) {
+    List<WorkflowInstance> findErrornousWorkflows(Pageable pageable) {
         return findByKeyValue("currentState.workflowStateEnum", WorkflowInstance.STATE_ACTIVITY_ERROR);
 
     }
-
 
     /**
      * Find idle workflows list.
@@ -58,7 +57,7 @@ public class WorkflowInstanceService extends AbstractRepositoryService2<Workflow
      * @param pageable the pageable
      * @return the list
      */
-    public List<WorkflowInstance> findIdleWorkflows(Pageable pageable) {
+    List<WorkflowInstance> findIdleWorkflows(Pageable pageable) {
         return findByKeyValue("currentState.workflowStateEnum", WorkflowInstance.STATE_IDLE);
 
     }
@@ -69,7 +68,7 @@ public class WorkflowInstanceService extends AbstractRepositoryService2<Workflow
      * @param pageable the pageable
      * @return the list
      */
-    public List<WorkflowInstance> findNewWorkflows(Pageable pageable) {
+    List<WorkflowInstance> findNewWorkflows(Pageable pageable) {
         return findByKeyValue("currentState.workflowStateEnum", WorkflowInstance.STATE_NEW);
 
     }
@@ -121,7 +120,7 @@ public class WorkflowInstanceService extends AbstractRepositoryService2<Workflow
      * @param userId       the user id
      * @return the list
      */
-    public List<WorkflowInstance> findbyWorkflowNameAndUserId(String workflowName, String userId) {
+    List<WorkflowInstance> findbyWorkflowNameAndUserId(String workflowName, String userId) {
 
         Map<String, String> searchMap = new HashMap<>();
         searchMap.put("workflowName", workflowName);

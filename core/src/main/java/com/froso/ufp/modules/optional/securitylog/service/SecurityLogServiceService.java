@@ -15,7 +15,6 @@ import org.springframework.stereotype.*;
 @Service
 public class SecurityLogServiceService extends AbstractRepositoryService2<SecurityLog> implements ISecurityLogService {
 
-
     /**
      * Instantiates a new Simple security log service service.
      */
@@ -24,6 +23,5 @@ public class SecurityLogServiceService extends AbstractRepositoryService2<Securi
         super(SecurityLog.TYPE_NAME);
 
     }
-
 
 }

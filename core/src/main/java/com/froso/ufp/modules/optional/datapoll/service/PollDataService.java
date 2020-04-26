@@ -5,7 +5,6 @@ import com.froso.ufp.modules.optional.datapoll.model.*;
 import org.springframework.stereotype.*;
 
 @Service
-public class PollDataService extends AbstractRepositoryService2<PollData> {
-
+class PollDataService extends AbstractRepositoryService2<PollData> {
 
 }

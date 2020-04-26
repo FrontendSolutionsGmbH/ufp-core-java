@@ -2,6 +2,7 @@ package com.froso.ufp.modules.core.user.service;
 
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.core.user.model.*;
+
 import java.util.*;
 
 /**
@@ -16,14 +17,13 @@ abstract public class AbstractCoreUserLinkedService<T extends IDataDocumentWithC
 
     protected AbstractCoreUserLinkedService(String thetype) {
         super(thetype);
-        this.typeName = thetype;
-        this.searchEqualsFields = new HashSet<>();
+        typeName = thetype;
+        searchEqualsFields = new HashSet<>();
     }
-
 
     public List<T> getAllEntriesForCoreUserId(String coreUserId) {
 
-        return this.findByKeyValue("coreUser.id", coreUserId);
+        return findByKeyValue("coreUser.id", coreUserId);
 
     }
 }

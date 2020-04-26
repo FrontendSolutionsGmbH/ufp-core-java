@@ -3,9 +3,10 @@ package com.froso.ufp.modules.optional.push.service;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.optional.messaging.model.messaging.*;
 import com.froso.ufp.modules.optional.push.model.*;
-import java.util.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 @Service
 public class PushService extends AbstractRepositoryService2<QueuePushMessage> {
@@ -24,7 +25,7 @@ public class PushService extends AbstractRepositoryService2<QueuePushMessage> {
      * @param p the p
      * @return the list
      */
-    public List<QueuePushMessage> findAllNew(Pageable p) {
+    List<QueuePushMessage> findAllNew(Pageable p) {
         return findByKeyValue("status", MessageStatusEnum.WAITING_TO_SEND.toString());
     }
 
@@ -34,7 +35,7 @@ public class PushService extends AbstractRepositoryService2<QueuePushMessage> {
      * @param p the p
      * @return the list
      */
-    public List<QueuePushMessage> findAllErrornous(Pageable p) {
+    List<QueuePushMessage> findAllErrornous(Pageable p) {
         return findByKeyValue("state", "ERROR");
     }
 

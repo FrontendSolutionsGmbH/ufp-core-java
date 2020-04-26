@@ -1,7 +1,7 @@
 # UFP Core
  
  # 2.x
-    - FIX filter controller, merge method for filter controller
+    - FIX my filter array filtering ' ' empty space
     - remove user role enum in favour of rights/roles resource
  
  # 1.0.6 

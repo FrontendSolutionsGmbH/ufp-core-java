@@ -27,36 +27,36 @@ public class FTPService extends AbstractRepositoryService2<FTPSetting> {
     /**
      * The constant CURRENT_DIR.
      */
-    public static final String CURRENT_DIR = ".";
+    private static final String CURRENT_DIR = ".";
     /**
      * The constant PARENT_DIR.
      */
-    public static final String PARENT_DIR = "..";
+    private static final String PARENT_DIR = "..";
     /**
      * The constant UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_HOST.
      */
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_HOST = "ufp.modules.optional.ftp.default.host";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_HOST = "ufp.modules.optional.ftp.default.host";
     /**
      * The constant UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PATH.
      */
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PATH = "ufp.modules.optional.ftp.default.path";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PATH = "ufp.modules.optional.ftp.default.path";
     /**
      * The constant UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PUBLICHTTP.
      */
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PUBLICHTTP = "ufp.modules.optional.ftp.default.publichttp";
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_DIRECTORY = "ufp.modules.optional.ftp.default.directory";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PUBLICHTTP = "ufp.modules.optional.ftp.default.publichttp";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_DIRECTORY = "ufp.modules.optional.ftp.default.directory";
     /**
      * The constant UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_USERNAME.
      */
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_USERNAME = "ufp.modules.optional.ftp.default.username";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_USERNAME = "ufp.modules.optional.ftp.default.username";
     /**
      * The constant UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PASSWORD.
      */
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PASSWORD = "ufp.modules.optional.ftp.default.password";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PASSWORD = "ufp.modules.optional.ftp.default.password";
     /**
      * The constant UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PORT.
      */
-    public static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PORT = "ufp.modules.optional.ftp.default.port";
+    private static final String UFP_MODULES_OPTIONAL_FTPSETTING_DEFAULT_PORT = "ufp.modules.optional.ftp.default.port";
     private static final Logger LOGGER = LoggerFactory.getLogger(FTPService.class);
     @Autowired
     private PropertyServiceRepositoryImpl propertyServiceRepository;
@@ -67,7 +67,7 @@ public class FTPService extends AbstractRepositoryService2<FTPSetting> {
     @PostConstruct
     public void ensureDefaultEntry() {
 
-        if (this.findByKeyValue("name", "default") == null) {
+        if (findByKeyValue("name", "default") == null) {
 
             FTPSetting settingDefault = createNewDefault();
             save(settingDefault);
@@ -80,6 +80,7 @@ public class FTPService extends AbstractRepositoryService2<FTPSetting> {
      *
      * @param object the object
      */
+    @Override
     protected void fillDefaultObject(FTPSetting object) {
         // template method, sub classes may initialises their objects as they desire...
         object.setName(propertyServiceRepository.getPropertyValue("Default"));
@@ -158,7 +159,7 @@ public class FTPService extends AbstractRepositoryService2<FTPSetting> {
      * @param id the id
      * @return the session factory by id
      */
-    public CachingSessionFactory getSessionFactoryById(String id) {
+    private CachingSessionFactory getSessionFactoryById(String id) {
         LOGGER.info("FTP SESSION BY ID:" + id);
         FTPSetting config = findOneBrute(id);
 

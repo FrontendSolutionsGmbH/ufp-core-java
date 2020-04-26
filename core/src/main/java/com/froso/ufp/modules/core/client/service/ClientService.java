@@ -3,7 +3,6 @@ package com.froso.ufp.modules.core.client.service;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
 import com.froso.ufp.modules.core.client.model.*;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**

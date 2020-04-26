@@ -3,9 +3,10 @@ package com.froso.ufp.modules.optional.push.service;
 import com.froso.ufp.core.service.*;
 import com.froso.ufp.modules.core.user.model.*;
 import com.froso.ufp.modules.optional.push.model.*;
-import java.util.*;
 import org.slf4j.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * The type Simple app device service.
@@ -17,7 +18,6 @@ public class AppDeviceService extends AbstractRepositoryService2<AppDevice> {
 
     //get log4j handler
     private static final Logger LOGGER = LoggerFactory.getLogger(AppDeviceService.class);
-
 
     /**
      * Constructor Simple app device service.
@@ -33,7 +33,6 @@ public class AppDeviceService extends AbstractRepositoryService2<AppDevice> {
      * @param userId the user id
      */
     public void deleteAllFromUser(String userId) {
-
 
         List<AppDevice> todelete = getAllAppDevicesForUserId(userId);
 
@@ -57,11 +56,10 @@ public class AppDeviceService extends AbstractRepositoryService2<AppDevice> {
      * @param coreUser the simple coreUser
      * @return all app devices for coreUser
      */
-    public List<AppDevice> getAllAppDevicesForUser(ICoreUser coreUser) {
+    List<AppDevice> getAllAppDevicesForUser(ICoreUser coreUser) {
 
         return findByKeyValue("coreUser._id", coreUser.getId());
     }
-
 
     /**
      * Create or update appdevice by token.
@@ -90,7 +88,7 @@ public class AppDeviceService extends AbstractRepositoryService2<AppDevice> {
      *
      * @param appDeviceTokens the app device tokens
      */
-    public void deleteInactiveTokens(List<String> appDeviceTokens) {
+    void deleteInactiveTokens(List<String> appDeviceTokens) {
 
         for (String deviceToken : appDeviceTokens) {
             deleteAppDeviceWithToken(deviceToken);
@@ -116,7 +114,7 @@ public class AppDeviceService extends AbstractRepositoryService2<AppDevice> {
      * @param token the token
      * @return the simple app device
      */
-    AppDevice findByToken(String token) {
+    private AppDevice findByToken(String token) {
 
         return findOneByKeyValue("token", token);
     }

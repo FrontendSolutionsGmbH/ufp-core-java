@@ -9,12 +9,13 @@ import com.froso.ufp.modules.core.user.model.*;
 import com.froso.ufp.modules.optional.authenticate.email.model.*;
 import com.froso.ufp.modules.optional.authenticate.email.service.*;
 import io.swagger.annotations.*;
-import javax.servlet.http.*;
-import javax.validation.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.*;
+import javax.validation.*;
 
 /**
  * The type CoreUser controller.
@@ -61,7 +62,7 @@ public class EmailGenericRegController<T extends ICoreUser> extends GenericRegCo
             UFPUser ufpUser = (UFPUser) account;
 
             ufpUser.getCoreUser().setId(pwmodel.getCoreUser().getId());
-            AbstractRepositoryService2<UFPUser> service = resourcesService.getResourceServiceByClassName(this.getClassOfRepository());
+            AbstractRepositoryService2<UFPUser> service = resourcesService.getResourceServiceByClassName(getClassOfRepository());
 
             service.save(ufpUser);
 

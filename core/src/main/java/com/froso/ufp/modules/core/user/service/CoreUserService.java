@@ -2,12 +2,10 @@ package com.froso.ufp.modules.core.user.service;
 
 import com.froso.ufp.core.exceptions.*;
 import com.froso.ufp.core.service.*;
-import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.user.exception.*;
 import com.froso.ufp.modules.core.user.model.*;
 import com.froso.ufp.modules.core.user.service.util.*;
 import org.apache.commons.lang3.*;
-import org.joda.time.*;
 import org.slf4j.*;
 
 /**
@@ -22,7 +20,7 @@ public class CoreUserService
         extends AbstractRepositoryService2<CoreUser> {
     public static final String TOKENIDENTIFIER_TIME = "t";
     public static final String TOKENIDENTIFIER_USERID = "u";
-    public static final int ONCE_PER_SESSION_RANDOM_STRING_LENGTH = 16;
+    private static final int ONCE_PER_SESSION_RANDOM_STRING_LENGTH = 16;
     private static final String TOKENIDENTIFIER_RETAIL = "r";
     private static final String TOKENIDENTIFIER_ROLE = "ro";
     //get log4j handler
@@ -39,7 +37,6 @@ public class CoreUserService
         containsDefinition.add("lastName");
 
     }
-
 
     /**
      * Gets constant once per session 128 bit secret key.
@@ -81,7 +78,7 @@ public class CoreUserService
      * @param email the email
      * @return the user
      */
-    public CoreUser findUserByEmailWithValidation(String email) {
+    private CoreUser findUserByEmailWithValidation(String email) {
 
         CoreUser result = findOneByKeyValue("email", email);
         if (null == result) {

@@ -7,7 +7,6 @@ import org.springframework.stereotype.*;
 @Service
 public class XLIFFService extends AbstractRepositoryService2<XLIFFModel> {
 
-
     /**
      * Constructor Simple product service.
      */

@@ -12,7 +12,6 @@ import org.springframework.stereotype.*;
 @Service
 public class BureauBotEndpointsService extends AbstractRepositoryService2<BureauBotEndpoints> {
 
-
     /**
      * Constructor Simple product service.
      */
