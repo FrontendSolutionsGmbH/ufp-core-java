@@ -9,7 +9,7 @@ import com.froso.ufp.core.exceptions.ValidationException;
 import com.froso.ufp.core.exceptions.*;
 import com.froso.ufp.core.response.binding.*;
 import com.froso.ufp.core.service.operations.*;
-import com.froso.ufp.core.service.util.*;
+import com.froso.ufp.core.service.util.*;dsf
 import com.froso.ufp.core.service.util.query.*;
 import com.froso.ufp.core.util.*;
 import com.froso.ufp.modules.core.resourcemetadata.model.*;
@@ -36,10 +36,11 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.*;
+xzvxzv
 
 public class AbstractRepositoryService2<T extends IDataDocument>
         extends EventPublisherImpl implements DataService<T>, RepositoryService<T>, IMetaDataResource {
-    public static final String DEFAULT_ID = "default";
+    private static final String DEFAULT_ID = "default";
     //get log4j handler
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRepositoryService2.class);
 
@@ -67,8 +68,8 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      */
     @Deprecated
     public AbstractRepositoryService2(String thetype) {
-        this.typeName = thetype;
-        this.searchEqualsFields = new HashSet<>();
+        typeName = thetype;
+        searchEqualsFields = new HashSet<>();
     }
 
     /**
@@ -87,8 +88,8 @@ public class AbstractRepositoryService2<T extends IDataDocument>
                                       ObjectMapper objectMapper,
                                       SessionService sessionService,
                                       ResourcesService resourcesService) {
-        this.typeName = thetype;
-        this.searchEqualsFields = new HashSet<>();
+        typeName = thetype;
+        searchEqualsFields = new HashSet<>();
 
         this.mongoOperations = mongoOperations;
         this.mongoTemplate = mongoTemplate;
@@ -99,10 +100,10 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
     @Deprecated
     public AbstractRepositoryService2() {
-        this.searchEqualsFields = new HashSet<>();
+        searchEqualsFields = new HashSet<>();
     }
 
-    public static <T> void validateObject(T object) {
+    private static <T> void validateObject(T object) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<T>> errors = validator.validate(object);
@@ -118,6 +119,25 @@ public class AbstractRepositoryService2<T extends IDataDocument>
             }
             throw new ValidationException("Validation Exception on ", bindingResult);
         }
+    }
+
+    /**
+     * Gets old collection name.
+     *
+     * @return the old collection name
+     */
+// utility helper method, if collection name changed, copy all from old to current
+    private static String getOldCollectionName() {
+        // template method
+        return null;
+    }
+
+    private static void printSearchKeyValues(Map<String, String> searchkeyvaluesIn) {
+
+        for (Map.Entry<String, String> entry : searchkeyvaluesIn.entrySet()) {
+            LOGGER.debug("{} => {}", entry.getKey(), entry.getValue());
+        }
+
     }
 
     @PostConstruct
@@ -153,7 +173,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
             LOGGER.info("DB index is " + dbObject.toString());
 
         }
-        if (this.getClassOfRepository().isAnnotationPresent(CompoundIndexes.class)) {
+        if (getClassOfRepository().isAnnotationPresent(CompoundIndexes.class)) {
 
             LOGGER.info("DB COllection is " + collection.toString());
 
@@ -167,10 +187,10 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
     }
 
-    public ResourceMetadata createMetaData() {
-        ResourceMetadata result = ExtractViewFromClass.getMetaDataForResourceFromAnnotations(this.getClassOfRepository());
-        result.getForeignKeys().addAll(ExtractViewFromClass.getForeignKeys(this.getClassOfRepository()));
-        result.getTags().addAll(ExtractViewFromClass.getResourceTagsFrom(this.getClassOfRepository()));
+    private ResourceMetadata createMetaData() {
+        ResourceMetadata result = ExtractViewFromClass.getMetaDataForResourceFromAnnotations(getClassOfRepository());
+        result.getForeignKeys().addAll(ExtractViewFromClass.getForeignKeys(getClassOfRepository()));
+        result.getTags().addAll(ExtractViewFromClass.getResourceTagsFrom(getClassOfRepository()));
 
         List<Class<?>> interfaces = ClassUtils.getAllInterfaces(getClassOfRepository());
         for (Class<?> clazz : interfaces) {
@@ -192,6 +212,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
     }
 
+    @Override
     public ResourceMetadata getMetadata() {
 
         // if (metadata == null) {
@@ -224,17 +245,6 @@ public class AbstractRepositoryService2<T extends IDataDocument>
     }
 
     /**
-     * Gets old collection name.
-     *
-     * @return the old collection name
-     */
-// utility helper method, if collection name changed, copy all from old to current
-    protected String getOldCollectionName() {
-        // template method
-        return null;
-    }
-
-    /**
      * Import default.
      */
    /* @Override
@@ -264,7 +274,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
     }
 
     @Override
-    public void setTypeName(final String typeName) {
+    public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
@@ -300,7 +310,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
         return textindexfieldname;
     }
 
-    protected String getCollectionName() {
+    private String getCollectionName() {
         //      return RepositoryConstants.UFP_REPOSITORY_PREFIX + getTypeName();
         String result = "";
 
@@ -326,11 +336,11 @@ public class AbstractRepositoryService2<T extends IDataDocument>
         return doSave(element, true);
     }
 
-    public T saveWithoutValidation(T element) {
+    private T saveWithoutValidation(T element) {
         return doSave(element, false);
     }
 
-    private final T doSave(T element, Boolean validate) {
+    private T doSave(T element, Boolean validate) {
 //        LOGGER.debug("Saving" + typeName + " " + element);
         if (element instanceof IDataDocument) {
             IDataDocument document = element;
@@ -371,9 +381,9 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
         if (publisher != null) {
             if (isExistant) {
-                this.publisher.publishEvent(new DataDocumentSaveEvent<>(element, this));
+                publisher.publishEvent(new DataDocumentSaveEvent<>(element, this));
             } else {
-                this.publisher.publishEvent(new DataDocumentCreateEvent<>(element, this));
+                publisher.publishEvent(new DataDocumentCreateEvent<>(element, this));
                 //     this.publisher.publishEvent(new DataDocumentSaveEvent<>(element, this));
             }
         }
@@ -388,7 +398,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
             mongoOperations.insert(element, getCollectionName());
         }
         if (publisher != null) {
-            this.publisher.publishEvent(new DataDocumentPostSaveEvent<T>(element, this));
+            publisher.publishEvent(new DataDocumentPostSaveEvent<>(element, this));
         }
         if (postSaveOperation(element)) {
             // if returned true means something changed in object, so save it again
@@ -396,15 +406,6 @@ public class AbstractRepositoryService2<T extends IDataDocument>
         }
         prepareResultElement(element);
         return element;
-    }
-
-    /**
-     * it is not abstract because it is not mandatory
-     *
-     * @param object the object
-     */
-    protected void prepareSave(T object) {
-        // template method, called before saving an object...
     }
 
 //    private void validateObject(T object) {
@@ -426,6 +427,15 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 //    }
 
     /**
+     * it is not abstract because it is not mandatory
+     *
+     * @param object the object
+     */
+    protected void prepareSave(T object) {
+        // template method, called before saving an object...
+    }
+
+    /**
      * Prepare result element.
      *
      * @param element the element
@@ -440,7 +450,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param element the element
      * @return the boolean
      */
-    protected Boolean postSaveOperation(T element) {
+    private Boolean postSaveOperation(T element) {
         // virtual template function to modify result
         return false;
     }
@@ -456,32 +466,6 @@ public class AbstractRepositoryService2<T extends IDataDocument>
         return newObject;
         // TODO: FIXME: dont save objects when created
         //  return save(newObject);
-    }
-
-    /**
-     * Gets default.
-     *
-     * @return the default
-     * @throws Exception the exception
-     */
-    public final T getDefault() {
-        // check if a default exists in db
-        T defaultone = findOneBrute(DEFAULT_ID);
-        if (defaultone == null) {
-            // no default found, return "new()"
-            try {
-                defaultone = getClassOfRepository().newInstance();
-            } catch (IllegalAccessException e) {
-                LOGGER.error("AbstractRepository getDefault() exception " + getTypeName() + ExceptionUtils.getRootCauseMessage(e), e);
-            } catch (InstantiationException e) {
-                LOGGER.error("AbstractRepository getDefault() exception " + getTypeName() + ExceptionUtils.getRootCauseMessage(e), e);
-            }
-        }
-        fillDefaultObject(defaultone);
-        if (defaultone instanceof AbstractDataDocumentWithName) {
-            ((AbstractDataDocumentWithName) defaultone).setName("New " + typeName);
-        }
-        return defaultone;
     }
 
 //    private String getUserIDFromToken(String token) {
@@ -528,39 +512,38 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 //    }
 
     /**
+     * Gets default.
+     *
+     * @return the default
+     * @throws Exception the exception
+     */
+    public final T getDefault() {
+        // check if a default exists in db
+        T defaultone = findOneBrute(DEFAULT_ID);
+        if (defaultone == null) {
+            // no default found, return "new()"
+            try {
+                defaultone = getClassOfRepository().newInstance();
+            } catch (IllegalAccessException e) {
+                LOGGER.error("AbstractRepository getDefault() exception " + getTypeName() + ExceptionUtils.getRootCauseMessage(e), e);
+            } catch (InstantiationException e) {
+                LOGGER.error("AbstractRepository getDefault() exception " + getTypeName() + ExceptionUtils.getRootCauseMessage(e), e);
+            }
+        }
+        fillDefaultObject(defaultone);
+        if (defaultone instanceof AbstractDataDocumentWithName) {
+            ((AbstractDataDocumentWithName) defaultone).setName("New " + typeName);
+        }
+        return defaultone;
+    }
+
+    /**
      * it is not abstract because it is not mandatory
      *
      * @param object the object
      */
     protected void fillDefaultObject(T object) {
         // template method, sub classes may initialises their objects as they desire...
-    }
-
-    /**
-     * Find one brute.
-     *
-     * @param id the id
-     * @return the t
-     */
-    @Override
-    public T findOneBrute(String id) {
-
-//        LOGGER.debug("findOneBrute {} {}", typeName, id);
-        if (id == null) {
-            return null;
-        }
-        Query query2 = new Query();
-        query2.addCriteria(Criteria.where("_id").is(id));
-        T result = null;
-        try {
-            result = mongoOperations.findOne(query2, getClassOfRepository(), getCollectionName());
-        } catch (Exception e) {
-            LOGGER.error("findoneBrute: {}", e);
-        }
-        if (result != null) {
-            prepareResultElement(result);
-        }
-        return result;
     }
 
     /**
@@ -591,6 +574,33 @@ public class AbstractRepositoryService2<T extends IDataDocument>
         return element;
     }
     */
+
+    /**
+     * Find one brute.
+     *
+     * @param id the id
+     * @return the t
+     */
+    @Override
+    public T findOneBrute(String id) {
+
+//        LOGGER.debug("findOneBrute {} {}", typeName, id);
+        if (id == null) {
+            return null;
+        }
+        Query query2 = new Query();
+        query2.addCriteria(Criteria.where("_id").is(id));
+        T result = null;
+        try {
+            result = mongoOperations.findOne(query2, getClassOfRepository(), getCollectionName());
+        } catch (Exception e) {
+            LOGGER.error("findoneBrute: {}", e);
+        }
+        if (result != null) {
+            prepareResultElement(result);
+        }
+        return result;
+    }
 
     /**
      * Find one.
@@ -642,8 +652,8 @@ public class AbstractRepositoryService2<T extends IDataDocument>
             return;
         }
         prepareDelete(element);
-        if (this.publisher != null) {
-            this.publisher.publishEvent(new DataDocumentDeleteEvent<T>(element, this));
+        if (publisher != null) {
+            publisher.publishEvent(new DataDocumentDeleteEvent<>(element, this));
         }
         mongoOperations.remove(element, getCollectionName());
     }
@@ -827,7 +837,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param searchkeyvaluesIn the searchkeyvalues in
      * @return map map
      */
-    protected Map<String, String> cleanInputRequestParams(Map<String, String> searchkeyvaluesIn) {
+    private Map<String, String> cleanInputRequestParams(Map<String, String> searchkeyvaluesIn) {
         // Klone the map
         Map<String, String> searchkeyvalues = new HashMap<>();
         searchkeyvalues.putAll(searchkeyvaluesIn);
@@ -846,14 +856,6 @@ public class AbstractRepositoryService2<T extends IDataDocument>
             searchkeyvalues.put(SearchQuery.SEARCH_METHOD_FIELD_NAME, SearchQuery.SEARCH_METHOD_OR);
         }
         return searchkeyvalues;
-    }
-
-    private void printSearchKeyValues(Map<String, String> searchkeyvaluesIn) {
-
-        for (Map.Entry<String, String> entry : searchkeyvaluesIn.entrySet()) {
-            LOGGER.debug("{} => {}", entry.getKey(), entry.getValue());
-        }
-
     }
 
     /**
@@ -978,6 +980,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
     }
 
+    @Override
     public final GroupByResults performGroup2(String groupByPropertyPath, String groupByValuePath, GroupByMethods method, Map<String, String> searchkeyvaluesIn) {
 
         if (null == groupByValuePath) {
@@ -990,7 +993,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
         // check for transforms
         // regexp for finding propertyPath.$controllCommand in property path
-        String patternString = ".*(.\\$.*)";
+        final String patternString = ".*(.\\$.*)";
 
         if (groupByPropertyPath.matches(patternString)) {
             Pattern pattern = Pattern.compile(patternString);
@@ -1035,15 +1038,15 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 
         if (groupByPropertyPath.contains("id")) {
 
-            Map<String, ResourceMetadata> resources = this.resourcesService.getRessourceNames();
-            ResourceMetadata def = resources.get(this.getTypeName());
+            Map<String, ResourceMetadata> resources = resourcesService.getRessourceNames();
+            ResourceMetadata def = resources.get(getTypeName());
             for (ForeignKey key : def.getForeignKeys()) {
                 if (key.getFieldName().equals(groupByPropertyPath)) {
 
                     LOGGER.info("--------------------------yay");
                     LOGGER.info(key.getResourceName());
                     // we have to resort original link resource if just interface is provided
-                    String resourceName = this.resourcesService.getResourceNameForInterface(key.getResourceName());
+                    String resourceName = resourcesService.getResourceNameForInterface(key.getResourceName());
                     LOGGER.info(resourceName);
                     if (resourceName == null) {
                         resourceName = key.getResourceName();
@@ -1077,7 +1080,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
         // initialize with zero
         String initialValue = "";
         // the result will always be our doc
-        String finalizeFunction = "function(doc){return doc;}";
+        final String finalizeFunction = "function(doc){return doc;}";
         // the reduce function defines the grouping operation
         String reduceFunction = "";
         /**
@@ -1139,7 +1142,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
 //    }
 //
 
-    public final GroupByResults performGroup(String groupingKeyFunction, String initialDOcumentJSON, String reduceFunctionJS, String finalizeFunction, Map<String, String> searchkeyvaluesIn) {
+    private GroupByResults performGroup(String groupingKeyFunction, String initialDOcumentJSON, String reduceFunctionJS, String finalizeFunction, Map<String, String> searchkeyvaluesIn) {
         Map<String, String> searchkeyvalues = cleanInputRequestParams(searchkeyvaluesIn);
         GroupByResults result = null;
         try {
@@ -1227,7 +1230,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param searchkeyvaluesIn the searchkeyvalues in
      * @return the map
      */
-    public Map<String, String> cleanInputRequestParamsFromSort(Map<String, String> searchkeyvaluesIn) {
+    private Map<String, String> cleanInputRequestParamsFromSort(Map<String, String> searchkeyvaluesIn) {
         // Klone the map
         Map<String, String> searchkeyvalues = cleanInputRequestParams(searchkeyvaluesIn);
         searchkeyvalues.remove(SearchQuery.SORT_PROPERTY);
@@ -1242,12 +1245,13 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param searchkeyvaluesIn the searchkeyvalues in
      * @return the map
      */
-    public Map<String, String> cleanInputRequestParamsFromPageable(Map<String, String> searchkeyvaluesIn) {
+    private Map<String, String> cleanInputRequestParamsFromPageable(Map<String, String> searchkeyvaluesIn) {
         // Klone the map
         Map<String, String> searchkeyvalues = cleanInputRequestParams(searchkeyvaluesIn);
 
         searchkeyvalues.remove(SearchQuery.LIMIT);
         searchkeyvalues.remove(SearchQuery.PAGE);
+        searchkeyvalues.remove("key");
         return searchkeyvalues;
     }
 
@@ -1257,7 +1261,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param searchkeyvaluesIn the searchkeyvalues in
      * @return list list
      */
-    public List<T> searchWithPageable(Map<String, String> searchkeyvaluesIn) {
+    private List<T> searchWithPageable(Map<String, String> searchkeyvaluesIn) {
         //  LOGGER.info("SEARCHING: " + searchkeyvaluesIn.toString());
 
         Map<String, String> copy = cleanInputRequestParamsFromPageable(searchkeyvaluesIn);
@@ -1318,7 +1322,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param query the query
      * @return long long
      */
-    long deleteByQuery(Query query) {
+    private long deleteByQuery(Query query) {
         long count = mongoOperations.count(query, getClassOfRepository(), getCollectionName());
         mongoOperations.remove(query, getClassOfRepository());
         return count;
@@ -1352,6 +1356,7 @@ public class AbstractRepositoryService2<T extends IDataDocument>
      * @param id the id
      * @return boolean boolean
      */
+    @Override
     public boolean isExistant(String id) {
         T element = findOneBrute(id);
         return null != element;
