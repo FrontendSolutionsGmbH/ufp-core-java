@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.*;
 import com.froso.ufp.core.*;
 import com.froso.ufp.core.domain.documents.*;
 import com.froso.ufp.core.service.*;
+import com.froso.ufp.modules.core.applicationproperty.interfaces.*;
 import com.froso.ufp.modules.core.templatesv2.service.*;
 import org.apache.commons.io.*;
 import org.slf4j.*;
@@ -53,8 +54,8 @@ public class WebConfigCore extends WebMvcConfigurerAdapter {
     @Value("${" + PROPERTY_UFP_STATIC_RESOURCES_PATH + "}")
     private String resourcesExternal;
 
-    @Value("${" + PROPERTY_UFP_STATIC_RESOURCES_CACHE + "}")
-    private Integer cacheSeconds;
+    @Autowired
+    private IPropertyService propertyService;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -64,12 +65,12 @@ public class WebConfigCore extends WebMvcConfigurerAdapter {
         LOGGER.info("Configuring UFP Static /web path");
         LOGGER.info("Using /web path: " + resourcesExternal);
         registry.addResourceHandler("/web/**").addResourceLocations("file:" + resourcesExternal + "/..")
-                .setCachePeriod(cacheSeconds)
+                .setCachePeriod(propertyService.getPropertyValueInteger(PROPERTY_UFP_STATIC_RESOURCES_CACHE, 60))
                 .resourceChain(true)
                 .addResolver(new GzipResourceResolver());
 
         registry.addResourceHandler("/**").addResourceLocations("file:" + resourcesExternal + "/..")
-                .setCachePeriod(cacheSeconds)
+                .setCachePeriod(propertyService.getPropertyValueInteger(PROPERTY_UFP_STATIC_RESOURCES_CACHE, 60))
                 .resourceChain(true)
                 .addResolver(new GzipResourceResolver());
 
