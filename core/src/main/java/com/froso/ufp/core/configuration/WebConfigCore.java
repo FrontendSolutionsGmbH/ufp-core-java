@@ -45,12 +45,16 @@ public class WebConfigCore extends WebMvcConfigurerAdapter {
      */
     public static final String CONFIG_JSON = "ufp.json";
     public static final String PROPERTY_UFP_STATIC_RESOURCES_PATH = "ufp.static.resources.path";
+    public static final String PROPERTY_UFP_STATIC_RESOURCES_CACHE = "ufp.static.resources.cache";
     private static final String APPLICATION = "application";
     private static final String JSON_EXTENDED = "json+extended";
     private static final String JSON_MINIMAL = "json+minimal";
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfigCore.class);
     @Value("${" + PROPERTY_UFP_STATIC_RESOURCES_PATH + "}")
     private String resourcesExternal;
+
+    @Value("${" + PROPERTY_UFP_STATIC_RESOURCES_CACHE + "}")
+    private Integer cacheSeconds;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -60,12 +64,12 @@ public class WebConfigCore extends WebMvcConfigurerAdapter {
         LOGGER.info("Configuring UFP Static /web path");
         LOGGER.info("Using /web path: " + resourcesExternal);
         registry.addResourceHandler("/web/**").addResourceLocations("file:" + resourcesExternal + "/..")
-                .setCachePeriod(60 * 60 * 24)
+                .setCachePeriod(cacheSeconds)
                 .resourceChain(true)
                 .addResolver(new GzipResourceResolver());
 
         registry.addResourceHandler("/**").addResourceLocations("file:" + resourcesExternal + "/..")
-                .setCachePeriod(60 * 60 * 24)
+                .setCachePeriod(cacheSeconds)
                 .resourceChain(true)
                 .addResolver(new GzipResourceResolver());
 
@@ -243,21 +247,6 @@ public class WebConfigCore extends WebMvcConfigurerAdapter {
         multipartResolver.setMaxUploadSize(Integer.MAX_VALUE);
         return multipartResolver;
     }
-
-    /**
-     * Gets view resolver.
-     *
-     * @return the view resolver
-     */
-//    @Bean
-//    public ViewResolver getViewResolver() {
-//
-//        VelocityViewResolver velocityViewResolver = new VelocityViewResolver();
-//        velocityViewResolver.setPrefix("/templates/");
-//        velocityViewResolver.setSuffix(".vm");
-//        velocityViewResolver.setContentType("text/html; charset=utf-8");
-//        return velocityViewResolver;
-//    }
 
     /**
      * Configure api resources.
