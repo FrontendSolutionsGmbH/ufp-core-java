@@ -116,7 +116,7 @@
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.18</version>
+            <version>1.21</version>
         </dependency>
         <dependency>
             <!-- https://mvnrepository.com/artifact/com.googlecode.libphonenumber/libphonenumber -->
